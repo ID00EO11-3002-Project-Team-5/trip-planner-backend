@@ -1,0 +1,39 @@
+{
+  "name": "trip-planner-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  "dev": "nodemon --watch src --exec ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js",
+  "test": "jest"
+}
+,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ID00EO11-3002-Project-Team-5/trip-planner-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ID00EO11-3002-Project-Team-5/trip-planner-backend/issues"
+  },
+  "homepage": "https://github.com/ID00EO11-3002-Project-Team-5/trip-planner-backend#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.1",
+    "cors": "^2.8.6",
+    "decimal.js": "^10.6.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
