@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import expensesRoutes from "./routes/expenses.routes";
+import settlementsRoutes from "./routes/settlements.routes";
+
 
 const app = express();
 
@@ -12,5 +14,7 @@ app.get("/health", (req, res) => {
 });
 //  Wire expenses routes
 app.use("/expenses", expensesRoutes);
+app.use("/settlements", settlementsRoutes);
+
 
 export default app;
