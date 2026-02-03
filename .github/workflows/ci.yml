@@ -42,7 +42,7 @@ jobs:
     name: Unit Testing
     runs-on: ubuntu-latest
    
-    # Optional: Only run tests if linting passes to save resources(comment to be removed once sure of necessity)
+    # Optional: Only run tests if linting passes to save resources(comment to be removed once sure of necessity   )
     needs: static-analysis 
     steps:
       - name: Checkout Code
