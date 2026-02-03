@@ -1,4 +1,4 @@
-ame: CI - Phase 1 (Static Analysis)
+name: CI - Phase 1 (Static Analysis)
 
 on:
   push:
