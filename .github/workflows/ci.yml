@@ -33,6 +33,11 @@ jobs:
       - name: 3. Type Check (TSC)
         run: npm run type-check
 
+      - name: 4.settlement service test (Jest)
+        run: npm test tests/settlement.service.test.ts
+        working-directory: ./trip-planner-backend
+
+
       - name: Secret Scanner
         uses: trufflesecurity/trufflehog@main
         with:
