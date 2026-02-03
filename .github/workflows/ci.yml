@@ -2,9 +2,9 @@ name: CI - Phase 1 (Static Analysis)
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   static-analysis:
@@ -18,8 +18,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm' # Speeds up future runs by caching node_modules
+          node-version: "20"
+          cache: "npm" # Speeds up future runs by caching node_modules
 
       - name: Install Dependencies
         run: npm ci # 'ci' is faster and more reliable than 'install' in pipelines
@@ -32,7 +32,7 @@ jobs:
 
       - name: 3. Type Check (TSC)
         run: npm run type-check
-        
+
       - name: Secret Scanner
         uses: trufflesecurity/trufflehog@main
         with:
