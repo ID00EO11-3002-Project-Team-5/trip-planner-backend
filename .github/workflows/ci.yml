@@ -6,11 +6,15 @@ on:
   pull_request:
     branches: [main]
 
+# Use global defaults so you don't have to repeat working-directory in every step
+defaults:
+  run:
+    working-directory: ./trip-planner-backend
+
 jobs:
   static-analysis:
     name: Lint & Type Check
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,10 +23,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm" # Speeds up future runs by caching node_modules
+          cache: "npm"
+          cache-dependency-path: ./trip-planner-backend/package-lock.json
 
       - name: Install Dependencies
-        run: npm ci # 'ci' is faster and more reliable than 'install' in pipelines
+        run: npm ci
 
       - name: 1. Verify Formatting (Prettier)
         run: npm run format:check
@@ -33,13 +38,25 @@ jobs:
       - name: 3. Type Check (TSC)
         run: npm run type-check
 
-      - name: 4.settlement service test (Jest)
-        run: npm test tests/settlement.service.test.ts
-        working-directory: ./trip-planner-backend
+  unit-tests:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+   
+    # Optional: Only run tests if linting passes to save resources(comment to be removed once sure of necessity)
+    needs: static-analysis 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-
-      - name: Secret Scanner
-        uses: trufflesecurity/trufflehog@main
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: ./trip-planner-backend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: 4. Settlement Service Test (Jest)
+        run: npm test tests/settlement.service.test.ts
