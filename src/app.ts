@@ -6,8 +6,6 @@ import 'dotenv/config'
 
 
 
-
-
 const app = express();
 
 app.use(cors());
@@ -24,6 +22,5 @@ app.get("/health", (_req, res) => {
 //  Wire expenses routes
 app.use("/expenses", expensesRoutes);
 app.use("/settlements", settlementsRoutes);
-
 
 export default app;
