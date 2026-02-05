@@ -2,10 +2,8 @@ import express from "express";
 import cors from "cors";
 import expensesRoutes from "./routes/expenses.routes";
 import settlementsRoutes from "./routes/settlements.routes";
-import 'dotenv/config'
+import "dotenv/config";
 import { supabase } from "./config/supabaseClient";
-
-
 
 const app = express();
 
@@ -32,6 +30,5 @@ app.get("/supabase-test", async (req, res) => {
 //  Wire expenses routes
 app.use("/expenses", expensesRoutes);
 app.use("/settlements", settlementsRoutes);
-
 
 export default app;

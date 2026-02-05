@@ -1,4 +1,5 @@
 # trip-planner-backend
+
 Overview
 
 This repository contains the backend implementation for the Collaborative Trip Planner application.
@@ -37,29 +38,30 @@ Jest – Unit testing
 
 Thunder Client – Manual API testing during development
 
-GitHub Actions – CI/CD 
+GitHub Actions – CI/CD
 
 Project Structure
 src/
-├── app.ts                 # Express app configuration
-├── server.ts              # Server bootstrap
+├── app.ts # Express app configuration
+├── server.ts # Server bootstrap
 ├── config/
-│   └── supabaseClient.ts  # Supabase client configuration (ready)
+│ └── supabaseClient.ts # Supabase client configuration (ready)
 ├── routes/
-│   ├── expenses.routes.ts
-│   └── settlements.routes.ts
+│ ├── expenses.routes.ts
+│ └── settlements.routes.ts
 ├── services/
-│   ├── splitBill.service.ts
-│   └── settlement.service.ts
+│ ├── splitBill.service.ts
+│ └── settlement.service.ts
 ├── validators/
-│   └── expense.schema.ts
-├── middleware/            # Reserved for auth & validation middleware
-└── controllers/           # Reserved for controller logic
+│ └── expense.schema.ts
+├── middleware/ # Reserved for auth & validation middleware
+└── controllers/ # Reserved for controller logic
 
 tests/
 └── settlement.service.test.ts
 
 Implemented Features
+
 1. REST API Skeletons
 
 POST /expenses
