@@ -44,7 +44,7 @@ export  const authService = {
     async logoutuser(token: string) {
         const { error } = await supabase.auth.signOut();
 
-        if (error) throw new Error(error.message); //why error message?
+        if (error) throw new Error(error.message); 
         return{messag: "Logged out successfully"};
     }
 
