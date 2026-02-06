@@ -1,5 +1,9 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
+/*import * as dotenv from 'dotenv'; 
+dotenv.config(); */
+
+
 const SUPABASE_URL = process.env.SUPABASE_URL!;
 const ANON_KEY = process.env.SUPABASE_ANON_KEY!;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_KEY!;
@@ -35,8 +39,6 @@ export function createUserClientFromAuthHeader(authHeader?: string) {
 
 
 
-/*import * as dotenv from 'dotenv'; 
-dotenv.config(); */
 
 
 

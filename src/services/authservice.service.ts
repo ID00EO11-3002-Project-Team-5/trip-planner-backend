@@ -1,5 +1,5 @@
 
-import { supabase } from '../config/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import { SignUpWithPasswordCredentials } from '@supabase/supabase-js';
 
 
