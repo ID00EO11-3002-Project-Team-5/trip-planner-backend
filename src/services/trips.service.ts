@@ -3,7 +3,7 @@ import { CreateTripInput } from "../validators/trip.schema";
 
 export async function createTripService(
   supabase: SupabaseClient,
-  payload: CreateTripInput
+  payload: CreateTripInput,
 ) {
   const { data, error } = await supabase
     .from("t_trip_trip")
