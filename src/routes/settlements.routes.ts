@@ -12,7 +12,7 @@ router.post("/", (req, res) => {
 
   if (!Array.isArray(balances)) {
     return res.status(400).json({
-      message: "Balances must be an array"
+      message: "Balances must be an array",
     });
   }
 
@@ -20,7 +20,7 @@ router.post("/", (req, res) => {
 
   res.status(200).json({
     message: "Settlements calculated",
-    data: settlements
+    data: settlements,
   });
 });
 

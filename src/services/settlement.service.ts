@@ -16,12 +16,12 @@ export interface Settlement {
  */
 export function calculateSettlements(balances: Balance[]): Settlement[] {
   const debtors = balances
-    .filter(b => b.amount < 0)
-    .map(b => ({ userId: b.userId, amount: new Decimal(-b.amount) }));
+    .filter((b) => b.amount < 0)
+    .map((b) => ({ userId: b.userId, amount: new Decimal(-b.amount) }));
 
   const creditors = balances
-    .filter(b => b.amount > 0)
-    .map(b => ({ userId: b.userId, amount: new Decimal(b.amount) }));
+    .filter((b) => b.amount > 0)
+    .map((b) => ({ userId: b.userId, amount: new Decimal(b.amount) }));
 
   const settlements: Settlement[] = [];
 
@@ -37,7 +37,7 @@ export function calculateSettlements(balances: Balance[]): Settlement[] {
     settlements.push({
       from: debtor.userId,
       to: creditor.userId,
-      amount: payment.toNumber()
+      amount: payment.toNumber(),
     });
 
     debtor.amount = debtor.amount.minus(payment);
