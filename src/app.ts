@@ -4,8 +4,8 @@ import expensesRoutes from "./routes/expenses.routes";
 import settlementsRoutes from "./routes/settlements.routes";
 import authserviceRoutes from "./routes/auth.routes"
 import 'dotenv/config'
+import tripsRoutes from "./routes/trips.routes";
 import { supabase } from "./config/supabaseClient";
-import { authService } from "./services/authservice.service";
 
 
 
@@ -34,6 +34,7 @@ app.get("/supabase-test", async (req, res) => {
 //  Wire expenses routes
 app.use("/expenses", expensesRoutes);
 app.use("/settlements", settlementsRoutes);
+app.use("/trips", tripsRoutes);
 app.use("/auth",authserviceRoutes)
 
 
