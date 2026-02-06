@@ -1,4 +1,4 @@
-ame: CI - Phase 1 (Static Analysis)
+name: CI - Phase 1 (Static Analysis)
 
 on:
   push:
@@ -10,7 +10,6 @@ jobs:
   static-analysis:
     name: Lint & Type Check
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,9 +19,11 @@ jobs:
         with:
           node-version: "20"
           cache: "npm" # Speeds up future runs by caching node_modules
+          
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        run: npm ci # 'ci' is faster and more reliable than 'install' in pipelines
+        run: npm ci
 
       - name: 1. Verify Formatting (Prettier)
         run: npm run format:check
@@ -42,9 +43,9 @@ jobs:
   unit-tests:
     name: Unit Testing
     runs-on: ubuntu-latest
-
+   
     # Optional: Only run tests if linting passes to save resources(comment to be removed once sure of necessity)
-    needs: static-analysis
+    needs: static-analysis 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
