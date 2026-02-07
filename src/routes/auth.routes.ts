@@ -1,0 +1,84 @@
+import { Router, Request, Response } from 'express';
+import { authService } from '../services/authservice.service';
+import { Session } from 'node:inspector';
+import { error } from 'node:console';
+
+const router = Router();
+
+router.post('/signup',async (req: Request , res: Response ) => {
+    try{
+        const {email, password, username} = req.body; 
+
+        if(!email || !password) {
+            return res.status(400).json({
+                error: 'Email and Password are required.'
+            });
+        }
+    const data = await authService.registerUser({
+        email,
+        password,
+        options:{
+            data: {username}  
+        }
+    })
+
+    return res.status(201).json({
+        message: 'Registration succesful!',
+        user: data.user,
+        session: data.session
+    });
+    } catch (error: any){
+
+        return res.status(400).json({
+            error: error.message || 'An error occured during signup.'
+        });
+
+    }
+});
+
+router.post('/login',async(req: Request, res: Response) => {
+    try{    
+        const {email, password} = req.body;
+
+        if(!email || !password) {
+                return res.status(400).json({
+                error: 'Email and Password are required.'
+                });
+        }
+    
+        const data =  await authService.loginUser({email, password});
+
+        return res.status(200).json({
+            message: 'Login succesful!',
+            user: data.user,
+            session: data.session
+        });
+    }catch(error: any){
+            return res.status(401).json({error: error.message});
+    }
+});
+
+
+
+router.post('/logout', async(req: Request, res: Response) => {
+    try{
+        const authHeader = req.headers.authorization;
+        const token = authHeader?.split('')[1];
+
+
+        if(!token){
+        return res.status(400).json({ error:'No token provided'});
+        }
+
+        await authService.logoutuser(token);
+
+
+        return res.status(200).json({message: 'Logout succesful'});   
+    }catch(error: any){
+        return res.status(500).json({error: error.message })
+
+    }
+
+})
+
+export default router

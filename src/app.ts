@@ -18,5 +18,8 @@ app.get("/health", (req, res) => {
 app.use("/expenses", expensesRoutes);
 app.use("/settlements", settlementsRoutes);
 app.use("/trips", tripsRoutes);
+app.use("/auth",authserviceRoutes);
+
+
 
 export default app;
