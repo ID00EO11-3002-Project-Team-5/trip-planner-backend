@@ -3,7 +3,7 @@ import { CreateExpenseInput } from "../validators/expense.schema";
 
 export const createExpenseService = async (
   supabase: SupabaseClient,
-  payload: CreateExpenseInput
+  payload: CreateExpenseInput,
 ) => {
   const { data, error } = await supabase
     .from("t_expense_expe")
