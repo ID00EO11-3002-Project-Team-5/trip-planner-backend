@@ -1,13 +1,16 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-import * as dotenv from 'dotenv'; 
-import path from 'path';
+import * as dotenv from "dotenv";
+import path from "path";
 
 // This explicitly points to the .env file in your root directory
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // DEBUG: This will show you exactly what keys were loaded
-console.log("Loaded Keys:", Object.keys(process.env).filter(k => k.startsWith('SUPABASE')));
+console.log(
+  "Loaded Keys:",
+  Object.keys(process.env).filter((k) => k.startsWith("SUPABASE")),
+);
 
 const SUPABASE_URL = process.env.SUPABASE_URL!;
 const ANON_KEY = process.env.ANON_KEY!;

@@ -3,7 +3,7 @@ import cors from "cors";
 import expensesRoutes from "./routes/expenses.routes";
 import settlementsRoutes from "./routes/settlements.routes";
 import "dotenv/config";
-import authserviceRoutes from "./routes/auth.routes"
+import authserviceRoutes from "./routes/auth.routes";
 import tripsRoutes from "./routes/trips.routes";
 
 const app = express();
@@ -19,8 +19,6 @@ app.get("/health", (req, res) => {
 app.use("/expenses", expensesRoutes);
 app.use("/settlements", settlementsRoutes);
 app.use("/trips", tripsRoutes);
-app.use("/auth",authserviceRoutes);
-
-
+app.use("/auth", authserviceRoutes);
 
 export default app;

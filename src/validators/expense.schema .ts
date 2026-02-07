@@ -7,6 +7,4 @@ export const createExpenseSchema = z.object({
   currency_expe: z.string().min(1),
 });
 
-
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;
-
