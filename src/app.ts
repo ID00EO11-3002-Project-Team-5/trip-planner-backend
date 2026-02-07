@@ -3,6 +3,7 @@ import cors from "cors";
 import expensesRoutes from "./routes/expenses.routes";
 import settlementsRoutes from "./routes/settlements.routes";
 import "dotenv/config";
+import authserviceRoutes from "./routes/auth.routes"
 import tripsRoutes from "./routes/trips.routes";
 
 const app = express();

@@ -1,5 +1,5 @@
 
-import { supabase } from '../lib/supabaseClient';
+import { adminSupabase } from '../lib/supabaseClients';
 import { SignUpWithPasswordCredentials } from '@supabase/supabase-js';
 
 
@@ -12,7 +12,7 @@ export  const authService = {
         
         const{ email,password,options} = credentials;  
         
-        const { data, error} = await supabase.auth.signUp({
+        const { data, error} = await adminSupabase.auth.signUp({
         email,
         password,
         options: {
@@ -32,7 +32,7 @@ export  const authService = {
     },
 
     async loginUser(credentials: { email: string; password: string }) {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await adminSupabase.auth.signInWithPassword({
             email: credentials.email,
             password: credentials.password,
         });
@@ -42,7 +42,7 @@ export  const authService = {
     },
 
     async logoutuser(token: string) {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await adminSupabase.auth.signOut();
 
         if (error) throw new Error(error.message); 
         return{messag: "Logged out successfully"};
