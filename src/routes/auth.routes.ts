@@ -23,7 +23,7 @@ router.post("/signup", async (req: Request, res: Response) => {
     });
 
     return res.status(201).json({
-      message: "Registration succesful!",
+      message: "Registration successful!",
       user: data.user,
       session: data.session,
     });
@@ -47,7 +47,7 @@ router.post("/login", async (req: Request, res: Response) => {
     const data = await authService.loginUser({ email, password });
 
     return res.status(200).json({
-      message: "Login succesful!",
+      message: "Login successful!",
       user: data.user,
       session: data.session,
     });
@@ -67,7 +67,7 @@ router.post("/logout", async (req: Request, res: Response) => {
 
     await authService.logoutuser(token);
 
-    return res.status(200).json({ message: "Logout succesful" });
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
