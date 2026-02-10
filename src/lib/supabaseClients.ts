@@ -32,3 +32,10 @@ export function createUserClientFromAuthHeader(authHeader?: string) {
     auth: { persistSession: false },
   }) as SupabaseClient;
 }
+/**
+ * Public client (anon key).
+ * Respects RLS. Used for standard login/logout flows.
+ */
+export const supabase = createClient(SUPABASE_URL, ANON_KEY, {
+  auth: { persistSession: false },
+});
