@@ -1,21 +1,23 @@
-import { adminSupabase } from "../lib/supabaseClients";
+
+import {  createUserClientFromAuthHeader, supabase } from "../lib/supabaseClients";
 import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
 
 export const authService = {
   async registerUser(credentials: SignUpWithPasswordCredentials) {
-    if (!("email" in credentials)) {
+    if ("email" in credentials) {
+      if (!credentials.email || !credentials.password) {
       throw new Error("Email is required for registration.");
     }
 
     const { email, password, options } = credentials;
 
-    const { data, error } = await adminSupabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: options?.data,
 
-        emailRedirectTo: "http://localhost:3000/",
+        emailRedirectTo: process.env.FRONTEND_URL,
       },
     });
 
@@ -24,10 +26,11 @@ export const authService = {
     }
 
     return data;
-  },
+  }
+},
 
   async loginUser(credentials: { email: string; password: string }) {
-    const { data, error } = await adminSupabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: credentials.email,
       password: credentials.password,
     });
@@ -37,7 +40,12 @@ export const authService = {
   },
 
   async logoutuser(token: string) {
-    const { error } = await adminSupabase.auth.signOut();
+
+    const userClient = createUserClientFromAuthHeader(`Bearrer ${token}`);
+
+    if(!userClient) throw new Error("Invalid session");
+
+    const { error } = await userClient.auth.signOut();
 
     if (error) throw new Error(error.message);
     return { messag: "Logged out successfully" };

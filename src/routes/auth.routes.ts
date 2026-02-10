@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { authService } from "../services/authservice.service";
-import { Session } from "node:inspector";
-import { error } from "node:console";
+
 
 const router = Router();
 
@@ -17,10 +16,12 @@ router.post("/signup", async (req: Request, res: Response) => {
     const data = await authService.registerUser({
       email,
       password,
-      options: {
-        data: { username },
-      },
+      options: { data: { username } },
     });
+
+    if (!data || !data.user) {
+      return res.status(400).json({ error: "User could not be created." });
+    }
 
     return res.status(201).json({
       message: "Registration succesful!",
@@ -59,7 +60,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.post("/logout", async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.split("")[1];
+    const token = authHeader?.split(" ")[1];
 
     if (!token) {
       return res.status(400).json({ error: "No token provided" });

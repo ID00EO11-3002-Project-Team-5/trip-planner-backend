@@ -11,7 +11,7 @@ export interface AuthRequest extends Request {
 export const protect = async (
   req: AuthRequest,
   res: Response,
-  ext: NextFunction,
+  next: NextFunction,
 ) => {
   const authHeader = req.headers.authorization;
 
@@ -33,14 +33,17 @@ export const protect = async (
     } = await userClient.auth.getUser();
 
     if (error || !user) {
-      return res.status(401).json({ error: "toekn is invalid or exprired" });
+      return res.status(401).json({ error: "Token is invalid or exprired" });
     }
 
     req.user = user;
     req.supabase = userClient;
+
+    next();
+
   } catch (err) {
     return res
       .status(500)
-      .json({ error: "integral server error during authentication" });
+      .json({ error: "internal server error during authentication" });
   }
 };
