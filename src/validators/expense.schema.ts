@@ -7,4 +7,6 @@ export const createExpenseSchema = z.object({
   currency_expe: z.enum(["USD", "EUR", "GBP"]),
 });
 
+
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;
+

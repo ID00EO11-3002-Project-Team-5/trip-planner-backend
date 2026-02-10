@@ -6,6 +6,7 @@ import "dotenv/config";
 import authserviceRoutes from "./routes/auth.routes";
 import tripsRoutes from "./routes/trips.routes";
 
+
 const app = express();
 
 app.use(cors());
