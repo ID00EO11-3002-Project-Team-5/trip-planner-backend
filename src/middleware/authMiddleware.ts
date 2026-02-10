@@ -40,7 +40,6 @@ export const protect = async (
     req.supabase = userClient;
 
     next();
-
   } catch (err) {
     return res
       .status(500)

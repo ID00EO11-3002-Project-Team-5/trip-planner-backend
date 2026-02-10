@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { authService } from "../services/authservice.service";
 
-
 const router = Router();
 
 router.post("/signup", async (req: Request, res: Response) => {
