@@ -1,51 +1,54 @@
+import {
+  createUserClientFromAuthHeader,
+  supabase,
+} from "../lib/supabaseClients";
+import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
 
-import { adminSupabase } from '../lib/supabaseClients';
-import { SignUpWithPasswordCredentials } from '@supabase/supabase-js';
+export const authService = {
+  async registerUser(credentials: SignUpWithPasswordCredentials) {
+    if ("email" in credentials) {
+      if (!credentials.email || !credentials.password) {
+        throw new Error("Email is required for registration.");
+      }
 
+      const { email, password, options } = credentials;
 
-export  const authService = {
-    async registerUser(credentials: SignUpWithPasswordCredentials){
-        
-        if (!('email' in credentials)) {
-            throw new Error("Email is required for registration.");
-        }
-        
-        const{ email,password,options} = credentials;  
-        
-        const { data, error} = await adminSupabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-
           data: options?.data,
-          
-          emailRedirectTo: 'http://localhost:3000/',
+
+          emailRedirectTo: process.env.FRONTEND_URL,
         },
-    });
-    
-    if(error){
+      });
 
+      if (error) {
         throw new Error(error.message);
+      }
+
+      return data;
     }
+  },
 
-    return data
-    },
+  async loginUser(credentials: { email: string; password: string }) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: credentials.email,
+      password: credentials.password,
+    });
 
-    async loginUser(credentials: { email: string; password: string }) {
-        const { data, error } = await adminSupabase.auth.signInWithPassword({
-            email: credentials.email,
-            password: credentials.password,
-        });
+    if (error) throw new Error(error.message);
+    return data;
+  },
 
-        if (error) throw new Error(error.message);
-        return data; 
-    },
+  async logoutuser(token: string) {
+    const userClient = createUserClientFromAuthHeader(`Bearrer ${token}`);
 
-    async logoutuser(token: string) {
-        const { error } = await adminSupabase.auth.signOut();
+    if (!userClient) throw new Error("Invalid session");
 
-        if (error) throw new Error(error.message); 
-        return{messag: "Logged out successfully"};
-    }
+    const { error } = await userClient.auth.signOut();
 
+    if (error) throw new Error(error.message);
+    return { messag: "Logged out successfully" };
+  },
 };
