@@ -16,6 +16,6 @@ export default tseslint.config(
   },
   {
     // Files to ignore (replaces .eslintignore)
-    ignores: ["dist/**", "node_modules/**", "build/**","jest.config.js"],
+    ignores: ["dist/**", "node_modules/**", "build/**", "jest.config.js"],
   },
 );
