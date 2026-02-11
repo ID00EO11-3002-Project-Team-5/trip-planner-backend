@@ -40,7 +40,7 @@ export const protect = async (
     req.supabase = userClient;
 
     next();
-  } catch (err) {
+  } catch (_err) {
     return res
       .status(500)
       .json({ error: "internal server error during authentication" });
