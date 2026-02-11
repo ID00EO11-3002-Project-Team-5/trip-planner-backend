@@ -1,26 +1,32 @@
 import { Router } from "express";
-import { createExpenseSchema } from "../validators/expense.schema";
+import { protect } from "../middleware/authMiddleware";
+import {
+  createExpense,
+  getExpensesByTrip,
+  updateExpense,
+  deleteExpense,
+} from "../controllers/expenses.controller";
 
 const router = Router();
 
 /**
  * POST /expenses
- * Mock endpoint with validation
+ * Create a new expense for a trip.
+ *
+ * Requires:
+ * - Authorization: Bearer <JWT>
+ *
+ * Notes:
+ * - Uses user-scoped Supabase client
+ * - Authorization enforced via RLS (auth.uid())
  */
-router.post("/", (req, res) => {
-  const result = createExpenseSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return res.status(400).json({
-      message: "Validation failed",
-      errors: result.error.flatten().fieldErrors,
-    });
-  }
-
-  res.status(201).json({
-    message: "Expense received (mock)",
-    data: result.data,
-  });
-});
-
+router.post("/", protect, createExpense);
+  
+/**
+ * GET /expenses?tripId=<uuid>
+ * Get all expenses for a trip.
+ */
+router.get("/", protect, getExpensesByTrip);
+router.put("/:id", protect, updateExpense);
+router.delete("/:id", protect, deleteExpense);
 export default router;
