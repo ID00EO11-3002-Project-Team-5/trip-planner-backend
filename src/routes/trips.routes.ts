@@ -6,13 +6,14 @@ import {
   getTrips,
   updateTrip,
 } from "../controllers/trips.controller";
+import { protect } from "../middleware/authMiddleware";
 
 const router = Router();
 
-router.post("/", createTrip);
-router.get("/", getTrips);
-router.get("/:id", getTrip);
-router.put("/:id", updateTrip);
-router.delete("/:id", deleteTrip);
+router.post("/", protect, createTrip);
+router.get("/", protect, getTrips);
+router.get("/:id", protect, getTrip);
+router.put("/:id", protect, updateTrip);
+router.delete("/:id", protect, deleteTrip);
 
 export default router;
