@@ -8,7 +8,8 @@ export const calculateSettlementsService = async (
   //  Fetch expense payers & shares
   const { data, error } = await supabase
     .from("t_expense_expe")
-    .select(`
+    .select(
+      `
       t_expense_payer_expa (
         id_user,
         payeramount_expa
@@ -17,7 +18,8 @@ export const calculateSettlementsService = async (
         id_user,
         shareamount_exsh
       )
-    `)
+    `,
+    )
     .eq("id_trip", tripId);
 
   if (error) {

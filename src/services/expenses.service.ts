@@ -1,5 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { CreateExpenseInput,UpdateExpenseInput, } from "../validators/expense.schema";
+import {
+  CreateExpenseInput,
+  UpdateExpenseInput,
+} from "../validators/expense.schema";
 
 const FLOAT_TOLERANCE = 0.01;
 export const createExpenseService = async (
@@ -17,7 +20,7 @@ export const createExpenseService = async (
     throw new Error("Sum of shares must equal total expense amount");
   }
   // create expenses
-  const {data: expense, error: expenseError } = await supabase
+  const { data: expense, error: expenseError } = await supabase
     .from("t_expense_expe")
     .insert({
       id_trip: payload.id_trip,
@@ -56,7 +59,7 @@ export const createExpenseService = async (
       payeramount_expa: payload.amount_expe,
     });
 
- if (payerError) {
+  if (payerError) {
     throw new Error(`Failed to insert payer: ${payerError.message}`);
   }
 
@@ -71,7 +74,8 @@ export const getExpensesByTripService = async (
 ) => {
   const { data, error } = await supabase
     .from("t_expense_expe")
-    .select(`
+    .select(
+      `
       id_expe,
       title_expe,
       amount_expe,
@@ -86,7 +90,8 @@ export const getExpensesByTripService = async (
         id_user,
         payeramount_expa
       )
-    `)
+    `,
+    )
     .eq("id_trip", tripId)
     .order("createdat_expe", { ascending: false });
 

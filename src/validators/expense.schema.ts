@@ -11,8 +11,7 @@ export const createExpenseSchema = z.object({
   amount_expe: z.number().positive(),
   currency_expe: z.enum(["USD", "EUR", "GBP"]),
 
-
-shares: z.array(expenseShareSchema).min(1),
+  shares: z.array(expenseShareSchema).min(1),
 });
 
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;

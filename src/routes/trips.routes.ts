@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { createTrip,   deleteTrip, getTrip, getTrips, updateTrip} from "../controllers/trips.controller";
+import {
+  createTrip,
+  deleteTrip,
+  getTrip,
+  getTrips,
+  updateTrip,
+} from "../controllers/trips.controller";
 
 const router = Router();
 

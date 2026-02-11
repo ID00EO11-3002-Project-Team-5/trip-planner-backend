@@ -5,8 +5,11 @@ export async function createTripService(
   supabase: SupabaseClient,
   payload: CreateTripInput,
 ) {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
     throw new Error("Unauthorized");
   }
@@ -30,8 +33,11 @@ export async function createTripService(
 }
 
 export async function getUserTripsService(supabase: SupabaseClient) {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
     throw new Error("Unauthorized");
   }
@@ -50,8 +56,11 @@ export async function getUserTripsService(supabase: SupabaseClient) {
 }
 
 export async function getTripService(supabase: SupabaseClient, tripId: string) {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
     throw new Error("Unauthorized");
   }
@@ -75,8 +84,11 @@ export async function updateTripService(
   tripId: string,
   payload: Partial<CreateTripInput>,
 ) {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
     throw new Error("Unauthorized");
   }
@@ -100,8 +112,11 @@ export async function deleteTripService(
   supabase: SupabaseClient,
   tripId: string,
 ) {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
   if (userError || !user) {
     throw new Error("Unauthorized");
   }

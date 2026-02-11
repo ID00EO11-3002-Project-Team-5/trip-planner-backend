@@ -1,7 +1,13 @@
 import { Request, Response } from "express";
 import { createTripSchema } from "../validators/trip.schema";
 import { createUserClientFromAuthHeader } from "../lib/supabaseClients";
-import { createTripService, getUserTripsService, getTripService , updateTripService, deleteTripService} from "../services/trips.service";
+import {
+  createTripService,
+  getUserTripsService,
+  getTripService,
+  updateTripService,
+  deleteTripService,
+} from "../services/trips.service";
 
 export const createTrip = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
@@ -33,7 +39,6 @@ export const createTrip = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const getTrips = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
@@ -82,7 +87,6 @@ export const getTrip = async (req: Request, res: Response) => {
   }
 };
 
-
 export const updateTrip = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   const { id } = req.params as { id: string };
@@ -106,8 +110,6 @@ export const updateTrip = async (req: Request, res: Response) => {
     });
   }
 };
-
-
 
 export const deleteTrip = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
