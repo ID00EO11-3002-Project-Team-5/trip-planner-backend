@@ -1,35 +1,106 @@
-import { Request, Response } from "express";
-import { createExpenseSchema } from "../validators/expense.schema";
-import { createUserClientFromAuthHeader } from "../lib/supabaseClients";
-import { createExpenseService } from "../services/expenses.service";
+import { Response } from "express";
+import { createExpenseSchema,updateExpenseSchema, } from "../validators/expense.schema";
+import { createExpenseService,getExpensesByTripService,updateExpenseService,
+  deleteExpenseService,} from "../services/expenses.service";
+import { AuthRequest } from "../middleware/authMiddleware";
 
-export const createExpense = async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
+export const createExpense = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    // Validate request body
+    const input = createExpenseSchema.parse(req.body);
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "Missing Authorization header" });
-  }
+    // Use values injected by protect middleware
+    const expense = await createExpenseService(
+      req.supabase!,   // user-scoped Supabase client
+      input,
+      req.user!.id,    // authenticated user id
+    );
 
-  const supabase = createUserClientFromAuthHeader(authHeader);
-  if (!supabase) {
-    return res.status(401).json({ message: "Invalid Authorization header" });
-  }
-
-  const parsed = createExpenseSchema.safeParse(req.body);
-  if (!parsed.success) {
+    return res.status(201).json(expense);
+  } catch (err) {
     return res.status(400).json({
-      message: "Validation failed",
-      errors: parsed.error.flatten().fieldErrors,
+      message: "Failed to create expense",
+      error: err instanceof Error ? err.message : "Unknown error",
+    });
+  }
+};
+/**
+ * GET /expenses?tripId=<uuid>
+ */
+export const getExpensesByTrip = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  const tripId = req.query.tripId as string;
+
+  if (!tripId) {
+    return res.status(400).json({
+      message: "tripId query parameter is required",
     });
   }
 
   try {
-    const expense = await createExpenseService(supabase, parsed.data);
-    return res.status(201).json(expense);
-  } catch (err: any) {
-    return res.status(403).json({
-      message: "Failed to create expense",
-      error: err.message,
+    const expenses = await getExpensesByTripService(
+      req.supabase!, // user-scoped Supabase client
+      tripId,
+    );
+
+    return res.status(200).json(expenses);
+  } catch (err) {
+    return res.status(500).json({
+      message: "Failed to fetch expenses",
+      error: err instanceof Error ? err.message : "Unknown error",
+    });
+  }
+};
+/**
+ * PUT /expenses/:id
+ * Update an expense (creator only – enforced by RLS)
+ */
+export const updateExpense = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const expenseId = req.params.id as string;
+    const input = updateExpenseSchema.parse(req.body);
+
+    const updatedExpense = await updateExpenseService(
+      req.supabase!,
+      expenseId,
+      input,
+    );
+
+    return res.status(200).json(updatedExpense);
+  } catch (err) {
+    return res.status(400).json({
+      message: "Failed to update expense",
+      error: err instanceof Error ? err.message : "Unknown error",
+    });
+  }
+};
+
+/**
+ * DELETE /expenses/:id
+ * Delete an expense (creator only – enforced by RLS)
+ */
+export const deleteExpense = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const expenseId = req.params.id as string;
+
+    await deleteExpenseService(req.supabase!, expenseId);
+
+    return res.status(204).send();
+  } catch (err) {
+    return res.status(400).json({
+      message: "Failed to delete expense",
+      error: err instanceof Error ? err.message : "Unknown error",
     });
   }
 };

@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { CreateExpenseInput } from "../validators/expense.schema";
+import { CreateExpenseInput,UpdateExpenseInput, } from "../validators/expense.schema";
 
+const FLOAT_TOLERANCE = 0.01;
 export const createExpenseService = async (
   supabase: SupabaseClient,
   payload: CreateExpenseInput,
@@ -12,7 +13,7 @@ export const createExpenseService = async (
     0,
   );
 
-  if (totalShares !== payload.amount_expe) {
+  if (Math.abs(totalShares - payload.amount_expe) > FLOAT_TOLERANCE) {
     throw new Error("Sum of shares must equal total expense amount");
   }
   // create expenses
@@ -28,12 +29,10 @@ export const createExpenseService = async (
     .select()
     .single();
 
-  if (expenseError) {
-    throw new Error(expenseError.message);
+  if (expenseError || !expense) {
+    throw new Error(expenseError?.message || "Expense creation failed");
   }
-   if (!expense) {
-    throw new Error("Expense creation failed");
-  }
+
   //  Insert expense shares
   const { error: sharesError } = await supabase
     .from("t_expense_share_exsh")
@@ -57,10 +56,9 @@ export const createExpenseService = async (
       payeramount_expa: payload.amount_expe,
     });
 
-  if (payerError) {
-    throw new Error(payerError.message);
+ if (payerError) {
+    throw new Error(`Failed to insert payer: ${payerError.message}`);
   }
-  
 
   return expense;
 };
@@ -97,4 +95,85 @@ export const getExpensesByTripService = async (
   }
 
   return data;
+};
+/**
+ * UPDATE expense (creator only – enforced by RLS)
+ */
+export const updateExpenseService = async (
+  supabase: SupabaseClient,
+  expenseId: string,
+  payload: UpdateExpenseInput,
+) => {
+  // 1️⃣ Update expense row
+  const { data: expense, error: expenseError } = await supabase
+    .from("t_expense_expe")
+    .update({
+      title_expe: payload.title_expe,
+      amount_expe: payload.amount_expe,
+      currency_expe: payload.currency_expe,
+    })
+    .eq("id_expe", expenseId)
+    .select()
+    .single();
+
+  if (expenseError || !expense) {
+    throw new Error("Failed to update expense");
+  }
+
+  // 2️⃣ Replace shares if provided
+  if (payload.shares) {
+    const totalShares = payload.shares.reduce(
+      (sum, share) => sum + share.shareamount_exsh,
+      0,
+    );
+
+    if (
+      payload.amount_expe !== undefined &&
+      Math.abs(totalShares - payload.amount_expe) > FLOAT_TOLERANCE
+    ) {
+      throw new Error("Sum of shares must equal total expense amount");
+    }
+
+    // Delete old shares
+    await supabase
+      .from("t_expense_share_exsh")
+      .delete()
+      .eq("id_expe", expenseId);
+
+    // Insert new shares
+    const { error: shareError } = await supabase
+      .from("t_expense_share_exsh")
+      .insert(
+        payload.shares.map((share) => ({
+          id_expe: expenseId,
+          id_user: share.id_user,
+          shareamount_exsh: share.shareamount_exsh,
+        })),
+      );
+
+    if (shareError) {
+      throw new Error(`Failed to update shares: ${shareError.message}`);
+    }
+  }
+
+  return expense;
+};
+
+/**
+ * DELETE expense (creator only – enforced by RLS)
+ */
+export const deleteExpenseService = async (
+  supabase: SupabaseClient,
+  expenseId: string,
+) => {
+  const { error } = await supabase
+    .from("t_expense_expe")
+    .delete()
+    .eq("id_expe", expenseId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { success: true };
 };
