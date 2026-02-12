@@ -60,7 +60,7 @@ export async function reorderItineraryService(
   }));
 
   const { data, error } = await supabase.rpc("reorder_itinerary", {
-    p_updates: updates, // Just pass the array directly
+    p_updates: payload, // Just pass the array directly
     p_trip_id: tripId,
   });
 
