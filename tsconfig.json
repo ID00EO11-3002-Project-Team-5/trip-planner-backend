@@ -5,6 +5,7 @@
     "moduleResolution": "Node",
     "outDir": "dist",
     "rootDir": "src",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
 
     "esModuleInterop": true,
     "strict": true,
