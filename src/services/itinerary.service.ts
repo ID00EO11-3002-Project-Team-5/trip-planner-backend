@@ -53,7 +53,7 @@ export async function reorderItineraryService(
 
   if (userError || !user) throw new Error("Unauthorized");
 
-  const payload = updates.map((item) => ({
+  const payload: any = updates.map((item) => ({
     id_itit: item.id_itit,
     position_itit: item.position_itit,
     id_trip: tripId, // Use the 3rd argument here. Match your DB column name (id_trip)
