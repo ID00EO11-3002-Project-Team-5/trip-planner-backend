@@ -70,8 +70,8 @@ jobs:
 
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.ANON_KEY }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
+      ANON_KEY: ${{ secrets.ANON_KEY }}
+      SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
       PORT: 3000
 
     steps:
