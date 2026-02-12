@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from "@supabase/supabase-js";
 import {
   createItinerarySchema,
   reorderItinerarySchema,
@@ -11,7 +11,6 @@ import {
   reorderItineraryService,
   deleteItineraryItemService,
 } from "../services/itinerary.service";
-
 
 interface AuthenticatedRequest extends Request {
   supabase: SupabaseClient;
@@ -40,8 +39,8 @@ export const reorderItinerary = async (req: Request, res: Response) => {
   const parsed = reorderItinerarySchema.safeParse(req.body);
 
   if (!parsed.success) {
-    return res.status(400).json({ 
-      errors: parsed.error.flatten().fieldErrors 
+    return res.status(400).json({
+      errors: parsed.error.flatten().fieldErrors,
     });
   }
 
@@ -49,14 +48,14 @@ export const reorderItinerary = async (req: Request, res: Response) => {
     const result = await reorderItineraryService(
       supabase!,
       parsed.data.updates,
-      parsed.data.tripId 
+      parsed.data.tripId,
     );
 
     return res.status(200).json(result);
   } catch (err: any) {
-    return res.status(403).json({ 
-      message: "Reorder failed", 
-      error: err.message 
+    return res.status(403).json({
+      message: "Reorder failed",
+      error: err.message,
     });
   }
 };
@@ -93,9 +92,8 @@ export const createItineraryItem = async (req: Request, res: Response) => {
   }
 };
 
-
 export async function deleteItinerary(req: Request, res: Response) {
-  const authReq = req as AuthenticatedRequest; 
+  const authReq = req as AuthenticatedRequest;
   const itemId = Array.isArray(authReq.params.itemId)
     ? authReq.params.itemId[0]
     : authReq.params.itemId;
@@ -104,13 +102,14 @@ export async function deleteItinerary(req: Request, res: Response) {
 
   // Safeguard: Check if data is null or an empty array
   if (!data || data.length === 0) {
-    return res.status(404).json({ 
-      message: "Itinerary item does not exist or you do not have permission to delete it" 
+    return res.status(404).json({
+      message:
+        "Itinerary item does not exist or you do not have permission to delete it",
     });
   }
 
-  return res.status(200).json({ 
-    message: "Deleted successfully", 
-    data: data[0] // Return the single deleted object instead of an array
+  return res.status(200).json({
+    message: "Deleted successfully",
+    data: data[0], // Return the single deleted object instead of an array
   });
 }

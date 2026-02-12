@@ -44,7 +44,7 @@ export async function createItineraryItemService(
 export async function reorderItineraryService(
   supabase: SupabaseClient,
   updates: { id_itit: string; position_itit: number }[], // Removed tripId from here
-  tripId: string // Added as the 3rd argument
+  tripId: string, // Added as the 3rd argument
 ) {
   const {
     data: { user },
@@ -59,9 +59,9 @@ export async function reorderItineraryService(
     id_trip: tripId, // Use the 3rd argument here. Match your DB column name (id_trip)
   }));
 
-  const { data, error } = await supabase.rpc("reorder_itinerary", { 
+  const { data, error } = await supabase.rpc("reorder_itinerary", {
     p_updates: updates, // Just pass the array directly
-    p_trip_id: tripId 
+    p_trip_id: tripId,
   });
 
   if (error) throw new Error(error.message);
@@ -70,7 +70,7 @@ export async function reorderItineraryService(
 
 export async function deleteItineraryItemService(
   supabase: SupabaseClient,
-  itemId: string
+  itemId: string,
 ) {
   const { data, error } = await supabase
     .from("t_itinerary_item_itit")
@@ -81,4 +81,3 @@ export async function deleteItineraryItemService(
   if (error) throw new Error(error.message);
   return data;
 }
-

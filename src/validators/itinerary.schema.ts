@@ -17,7 +17,7 @@ export const reorderItinerarySchema = z.object({
     z.object({
       id_itit: z.string().uuid(),
       position_itit: z.number().int().nonnegative(),
-    })
+    }),
   ),
 });
 
