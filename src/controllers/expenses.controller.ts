@@ -1,22 +1,26 @@
 import { Response } from "express";
-import { createExpenseSchema,updateExpenseSchema, } from "../validators/expense.schema";
-import { createExpenseService,getExpensesByTripService,updateExpenseService,
-  deleteExpenseService,} from "../services/expenses.service";
+import {
+  createExpenseSchema,
+  updateExpenseSchema,
+} from "../validators/expense.schema";
+import {
+  createExpenseService,
+  getExpensesByTripService,
+  updateExpenseService,
+  deleteExpenseService,
+} from "../services/expenses.service";
 import { AuthRequest } from "../middleware/authMiddleware";
 
-export const createExpense = async (
-  req: AuthRequest,
-  res: Response,
-) => {
+export const createExpense = async (req: AuthRequest, res: Response) => {
   try {
     // Validate request body
     const input = createExpenseSchema.parse(req.body);
 
     // Use values injected by protect middleware
     const expense = await createExpenseService(
-      req.supabase!,   // user-scoped Supabase client
+      req.supabase!, // user-scoped Supabase client
       input,
-      req.user!.id,    // authenticated user id
+      req.user!.id, // authenticated user id
     );
 
     return res.status(201).json(expense);
@@ -30,10 +34,7 @@ export const createExpense = async (
 /**
  * GET /expenses?tripId=<uuid>
  */
-export const getExpensesByTrip = async (
-  req: AuthRequest,
-  res: Response,
-) => {
+export const getExpensesByTrip = async (req: AuthRequest, res: Response) => {
   const tripId = req.query.tripId as string;
 
   if (!tripId) {
@@ -60,10 +61,7 @@ export const getExpensesByTrip = async (
  * PUT /expenses/:id
  * Update an expense (creator only – enforced by RLS)
  */
-export const updateExpense = async (
-  req: AuthRequest,
-  res: Response,
-) => {
+export const updateExpense = async (req: AuthRequest, res: Response) => {
   try {
     const expenseId = req.params.id as string;
     const input = updateExpenseSchema.parse(req.body);
@@ -87,10 +85,7 @@ export const updateExpense = async (
  * DELETE /expenses/:id
  * Delete an expense (creator only – enforced by RLS)
  */
-export const deleteExpense = async (
-  req: AuthRequest,
-  res: Response,
-) => {
+export const deleteExpense = async (req: AuthRequest, res: Response) => {
   try {
     const expenseId = req.params.id as string;
 

@@ -21,7 +21,7 @@ const router = Router();
  * - Authorization enforced via RLS (auth.uid())
  */
 router.post("/", protect, createExpense);
-  
+
 /**
  * GET /expenses?tripId=<uuid>
  * Get all expenses for a trip.

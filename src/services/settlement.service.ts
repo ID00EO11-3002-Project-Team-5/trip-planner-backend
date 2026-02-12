@@ -33,7 +33,7 @@ export function calculateSettlements(balances: Balance[]): Settlement[] {
     }))
     .sort((a, b) => b.amount.comparedTo(a.amount)); // larger credits first
 
-    const settlements: Settlement[] = [];
+  const settlements: Settlement[] = [];
 
   let i = 0;
   let j = 0;
@@ -53,7 +53,7 @@ export function calculateSettlements(balances: Balance[]): Settlement[] {
     debtor.amount = debtor.amount.minus(payment);
     creditor.amount = creditor.amount.minus(payment);
 
-   if (debtor.amount.abs().lessThan(TOLERANCE)) {
+    if (debtor.amount.abs().lessThan(TOLERANCE)) {
       debtor.amount = ZERO;
       i++;
     }
@@ -63,7 +63,6 @@ export function calculateSettlements(balances: Balance[]): Settlement[] {
       j++;
     }
   }
-
 
   return settlements;
 }
