@@ -1,8 +1,5 @@
 import { Response, NextFunction } from "express";
-import {
-  createUserClientFromAuthHeader,
-  supabase,
-} from "../lib/supabaseClients";
+import { createUserClientFromAuthHeader } from "../lib/supabaseClients";
 import { Request } from "express";
 import { SupabaseClient } from "@supabase/supabase-js";
 
