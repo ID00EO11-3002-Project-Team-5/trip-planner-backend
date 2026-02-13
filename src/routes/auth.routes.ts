@@ -25,14 +25,17 @@ router.post("/signup", async (req: Request, res: Response) => {
     return res.status(201).json({
       message: "Registration successful!",
       user: data.user,
-      session: data.session,
+      session: data.session || null,
     });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "An unexpected error occurred";
-    const isClientError =
-      message.toLowerCase().includes("already") || message.includes("invalid");
-    return res.status(isClientError ? 400 : 500).json({ error: message });
+    const message = err instanceof Error ? err.message : "Registration failed";
+    
+    
+    const isConflict = message.toLowerCase().includes("already") || message.includes("registered");
+   
+    return res.status(isConflict ? 400 : 500).json({ 
+      error: message 
+    });
   }
 });
 
