@@ -28,9 +28,9 @@ router.post("/signup", async (req: Request, res: Response) => {
       session: data.session,
     });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "An unexpected error occurred";
-    return res.status(500).json({ message });
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    const isClientError = message.toLowerCase().includes("already") || message.includes("invalid");
+    return res.status(isClientError ? 400 : 500).json({ error: message });
   }
 });
 
@@ -52,9 +52,8 @@ router.post("/login", async (req: Request, res: Response) => {
       session: data.session,
     });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "An unexpected error occurred";
-    return res.status(500).json({ message });
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(401).json({ error: message });
   }
 });
 
