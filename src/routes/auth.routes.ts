@@ -29,12 +29,13 @@ router.post("/signup", async (req: Request, res: Response) => {
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Registration failed";
-    
-    
-    const isConflict = message.toLowerCase().includes("already") || message.includes("registered");
-   
-    return res.status(isConflict ? 400 : 500).json({ 
-      error: message 
+
+    const isConflict =
+      message.toLowerCase().includes("already") ||
+      message.includes("registered");
+
+    return res.status(isConflict ? 400 : 500).json({
+      error: message,
     });
   }
 });
