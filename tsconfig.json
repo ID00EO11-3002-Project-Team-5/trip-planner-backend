@@ -13,5 +13,7 @@
 
     "forceConsistentCasingInFileNames": true
   },
+  "include": ["src/**/*"],
+  "files": ["src/types/express.d.ts"],
   "exclude": ["tests", "**/*.test.ts"]
 }

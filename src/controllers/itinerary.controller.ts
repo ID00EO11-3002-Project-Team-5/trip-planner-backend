@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { AuthRequest } from "../middleware/authMiddleware";
 import {
   createItinerarySchema,
   reorderItinerarySchema,
@@ -11,8 +10,13 @@ import {
   deleteItineraryItemService,
 } from "../services/itinerary.service";
 
-export const getTripSchedule = async (req: AuthRequest, res: Response) => {
+export const getTripSchedule = async (req: Request, res: Response) => {
   const tripId = req.params.tripId as string;
+  if (!req.supabase) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing security context" });
+  }
 
   try {
     // req.supabase is provided by protect middleware
@@ -26,8 +30,12 @@ export const getTripSchedule = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const reorderItinerary = async (req: AuthRequest, res: Response) => {
+export const reorderItinerary = async (req: Request, res: Response) => {
   const parsed = reorderItinerarySchema.safeParse(req.body);
+
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -50,8 +58,13 @@ export const reorderItinerary = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const createItineraryItem = async (req: AuthRequest, res: Response) => {
+export const createItineraryItem = async (req: Request, res: Response) => {
   const parsed = createItinerarySchema.safeParse(req.body);
+
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   if (!parsed.success) {
     return res.status(400).json({
       message: "Validation failed",
@@ -70,8 +83,12 @@ export const createItineraryItem = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export async function deleteItinerary(req: AuthRequest, res: Response) {
+export async function deleteItinerary(req: Request, res: Response) {
   const { itemId } = req.params as { itemId: string };
+
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   try {
     const data = await deleteItineraryItemService(req.supabase, itemId);

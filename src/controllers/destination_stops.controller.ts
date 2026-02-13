@@ -1,5 +1,4 @@
-import { Response } from "express";
-import { AuthRequest } from "../middleware/authMiddleware";
+import { Request, Response } from "express";
 import {
   CreateStopSchema,
   ReorderStopsSchema,
@@ -9,8 +8,14 @@ import {
   reorderStopsService,
 } from "../services/destination_stops.service";
 
-export const createStop = async (req: AuthRequest, res: Response) => {
+export const createStop = async (req: Request, res: Response) => {
   const parsed = CreateStopSchema.safeParse(req.body);
+
+  if (!req.supabase) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing security context" });
+  }
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -32,8 +37,14 @@ export const createStop = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const reorderStops = async (req: AuthRequest, res: Response) => {
+export const reorderStops = async (req: Request, res: Response) => {
   const parsed = ReorderStopsSchema.safeParse(req.body);
+
+  if (!req.supabase) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing security context" });
+  }
 
   if (!parsed.success) {
     return res.status(400).json({
