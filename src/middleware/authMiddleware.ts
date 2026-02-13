@@ -12,7 +12,7 @@ interface AugmentedRequest extends Request {
 }
 
 export const protect = async (
-  req: Request, 
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
@@ -42,17 +42,15 @@ export const protect = async (
     augmentedReq.user = user;
     augmentedReq.supabase = supabaseClient;
 
-  
     req.user = user;
     req.supabase = supabaseClient;
 
     next();
   } catch (err: unknown) {
-  
     const message = err instanceof Error ? err.message : "Unknown error";
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: "Internal server error during authentication",
-      details: message 
-    }); 
+      details: message,
+    });
   }
 };
