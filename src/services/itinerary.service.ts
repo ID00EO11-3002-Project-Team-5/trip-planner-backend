@@ -5,12 +5,6 @@ export async function getTripScheduleService(
   supabase: SupabaseClient,
   tripId: string,
 ) {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-  if (userError || !user) throw new Error("Unauthorized");
-
   const { data, error } = await supabase
     .from("t_itinerary_item_itit")
     .select(
@@ -43,16 +37,9 @@ export async function createItineraryItemService(
 
 export async function reorderItineraryService(
   supabase: SupabaseClient,
-  updates: { id_itit: string; position_itit: number }[], // Removed tripId from here
-  tripId: string, // Added as the 3rd argument
+  updates: { id_itit: string; position_itit: number }[],
+  tripId: string,
 ) {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) throw new Error("Unauthorized");
-
   const payload: any = updates.map((item) => ({
     id_itit: item.id_itit,
     position_itit: item.position_itit,

@@ -5,7 +5,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface AuthRequest extends Request {
   user?: any;
-  supabase?: SupabaseClient;
+  supabase: SupabaseClient;
 }
 
 export const protect = async (
