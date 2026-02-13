@@ -12,7 +12,7 @@ interface AugmentedRequest extends Request {
 }
 
 export const protect = async (
-  req: Request, // Use standard Request
+  req: Request, 
   res: Response,
   next: NextFunction,
 ) => {
@@ -42,14 +42,17 @@ export const protect = async (
     augmentedReq.user = user;
     augmentedReq.supabase = supabaseClient;
 
-    // These now work because of your express.d.ts
+  
     req.user = user;
     req.supabase = supabaseClient;
 
     next();
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Internal server error during authentication" });
+  } catch (err: unknown) {
+  
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return res.status(500).json({ 
+      error: "Internal server error during authentication",
+      details: message 
+    }); 
   }
 };

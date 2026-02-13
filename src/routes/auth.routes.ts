@@ -27,10 +27,9 @@ router.post("/signup", async (req: Request, res: Response) => {
       user: data.user,
       session: data.session,
     });
-  } catch (error: any) {
-    return res.status(400).json({
-      error: error.message || "An error occured during signup.",
-    });
+  } catch (err: unknown) { 
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(500).json({ message });
   }
 });
 
@@ -51,8 +50,9 @@ router.post("/login", async (req: Request, res: Response) => {
       user: data.user,
       session: data.session,
     });
-  } catch (error: any) {
-    return res.status(401).json({ error: error.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(500).json({ message });
   }
 });
 
@@ -68,8 +68,9 @@ router.post("/logout", async (req: Request, res: Response) => {
     await authService.logoutuser(token);
 
     return res.status(200).json({ message: "Logout successful" });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+  } catch (err: unknown) { 
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(500).json({ message });
   }
 });
 
