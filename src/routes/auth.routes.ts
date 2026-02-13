@@ -7,9 +7,9 @@ router.post("/signup", async (req: Request, res: Response) => {
   try {
     const { email, password, username } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !username) {
       return res.status(400).json({
-        error: "Email and Password are required.",
+        error: "Email, Password  and Username are required.",
       });
     }
     const data = await authService.registerUser({

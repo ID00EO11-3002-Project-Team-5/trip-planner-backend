@@ -4,9 +4,11 @@ import { adminSupabase } from "../src/lib/supabaseClients";
 
 describe("User Lifecycle: Create to Delete", () => {
   let userId: string;
+  const timestamp = Date.now();
   const testUser = {
-    email: `lifecycle-${Date.now()}@test.com`,
+    email: `lifecycle-${timestamp}@test.com`,
     password: "SecurePassword123!",
+    username: `user_${timestamp}`,
   };
 
   // 1. SIGN UP
@@ -23,8 +25,7 @@ describe("User Lifecycle: Create to Delete", () => {
     expect(res.body.session).toHaveProperty("access_token");
   });
 
-  // 3. DELETE (The Cleanup)
-  // We use "afterAll" to ensure the user is deleted even if previous tests fail
+  // 3. DELETE
   afterAll(async () => {
     if (userId) {
       const { error } = await adminSupabase.auth.admin.deleteUser(userId);
