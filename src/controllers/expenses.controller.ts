@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import {
   createExpenseSchema,
   updateExpenseSchema,
@@ -9,93 +9,110 @@ import {
   updateExpenseService,
   deleteExpenseService,
 } from "../services/expenses.service";
-import { AuthRequest } from "../middleware/authMiddleware";
 
-export const createExpense = async (req: AuthRequest, res: Response) => {
+export const createExpense = async (req: Request, res: Response) => {
+  if (!req.supabase || !req.user) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Missing security context" });
+  }
+
   try {
-    // Validate request body
     const input = createExpenseSchema.parse(req.body);
 
-    // Use values injected by protect middleware
     const expense = await createExpenseService(
-      req.supabase!, // user-scoped Supabase client
+      req.supabase,
       input,
-      req.user!.id, // authenticated user id
+      req.user.id,
     );
 
     return res.status(201).json(expense);
-  } catch (err) {
-    return res.status(400).json({
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return res.status(500).json({
       message: "Failed to create expense",
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: message,
     });
   }
 };
 /**
  * GET /expenses?tripId=<uuid>
  */
-export const getExpensesByTrip = async (req: AuthRequest, res: Response) => {
-  const tripId = req.query.tripId as string;
+export const getExpensesByTrip = async (req: Request, res: Response) => {
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  if (!tripId) {
+  const { tripId } = req.query;
+
+  if (!tripId || typeof tripId !== "string") {
     return res.status(400).json({
       message: "tripId query parameter is required",
     });
   }
 
   try {
-    const expenses = await getExpensesByTripService(
-      req.supabase!, // user-scoped Supabase client
-      tripId,
-    );
-
+    const expenses = await getExpensesByTripService(req.supabase, tripId);
     return res.status(200).json(expenses);
-  } catch (err) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
     return res.status(500).json({
       message: "Failed to fetch expenses",
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: message,
     });
   }
 };
-/**
- * PUT /expenses/:id
- * Update an expense (creator only – enforced by RLS)
- */
-export const updateExpense = async (req: AuthRequest, res: Response) => {
+
+export const updateExpense = async (req: Request, res: Response) => {
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   try {
-    const expenseId = req.params.id as string;
+    const { id: expenseId } = req.params;
+
+    if (typeof expenseId !== "string") {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
     const input = updateExpenseSchema.parse(req.body);
 
     const updatedExpense = await updateExpenseService(
-      req.supabase!,
+      req.supabase,
       expenseId,
       input,
     );
 
     return res.status(200).json(updatedExpense);
-  } catch (err) {
-    return res.status(400).json({
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return res.status(500).json({
       message: "Failed to update expense",
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: message,
     });
   }
 };
 
-/**
- * DELETE /expenses/:id
- * Delete an expense (creator only – enforced by RLS)
- */
-export const deleteExpense = async (req: AuthRequest, res: Response) => {
-  try {
-    const expenseId = req.params.id as string;
+export const deleteExpense = async (req: Request, res: Response) => {
+  if (!req.supabase) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-    await deleteExpenseService(req.supabase!, expenseId);
+  try {
+    const { id: expenseId } = req.params;
+
+    if (typeof expenseId !== "string") {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    await deleteExpenseService(req.supabase, expenseId);
 
     return res.status(204).send();
-  } catch (err) {
-    return res.status(400).json({
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return res.status(500).json({
       message: "Failed to delete expense",
-      error: err instanceof Error ? err.message : "Unknown error",
+      error: message,
     });
   }
 };

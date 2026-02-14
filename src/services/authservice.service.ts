@@ -42,7 +42,7 @@ export const authService = {
   },
 
   async logoutuser(token: string) {
-    const userClient = createUserClientFromAuthHeader(`Bearrer ${token}`);
+    const userClient = createUserClientFromAuthHeader(`Bearer ${token}`);
 
     if (!userClient) throw new Error("Invalid session");
 

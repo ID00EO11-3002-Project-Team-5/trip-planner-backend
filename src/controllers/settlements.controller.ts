@@ -1,12 +1,11 @@
-import { Response } from "express";
-import { AuthRequest } from "../middleware/authMiddleware";
+import { Request, Response } from "express";
 import { calculateSettlementsService } from "../services/settlements.service";
 
 /**
  * GET /settlements?tripId=<uuid>
  * Calculate settlements for a trip
  */
-export const getTripSettlements = async (req: AuthRequest, res: Response) => {
+export const getTripSettlements = async (req: Request, res: Response) => {
   const tripId = req.query.tripId as string;
 
   if (!tripId) {

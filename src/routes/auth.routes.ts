@@ -7,9 +7,9 @@ router.post("/signup", async (req: Request, res: Response) => {
   try {
     const { email, password, username } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !username) {
       return res.status(400).json({
-        error: "Email and Password are required.",
+        error: "Email, Password  and Username are required.",
       });
     }
     const data = await authService.registerUser({
@@ -25,11 +25,17 @@ router.post("/signup", async (req: Request, res: Response) => {
     return res.status(201).json({
       message: "Registration successful!",
       user: data.user,
-      session: data.session,
+      session: data.session || null,
     });
-  } catch (error: any) {
-    return res.status(400).json({
-      error: error.message || "An error occured during signup.",
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Registration failed";
+
+    const isConflict =
+      message.toLowerCase().includes("already") ||
+      message.includes("registered");
+
+    return res.status(isConflict ? 400 : 500).json({
+      error: message,
     });
   }
 });
@@ -51,8 +57,10 @@ router.post("/login", async (req: Request, res: Response) => {
       user: data.user,
       session: data.session,
     });
-  } catch (error: any) {
-    return res.status(401).json({ error: error.message });
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(401).json({ error: message });
   }
 });
 
@@ -68,8 +76,10 @@ router.post("/logout", async (req: Request, res: Response) => {
     await authService.logoutuser(token);
 
     return res.status(200).json({ message: "Logout successful" });
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "An unexpected error occurred";
+    return res.status(500).json({ message });
   }
 });
 
