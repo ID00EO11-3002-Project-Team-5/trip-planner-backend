@@ -53,4 +53,24 @@ export const authService = {
     if (error) throw new Error(error.message);
     return { messag: "Logged out successfully" };
   },
+
+  async deleteSelfAccount(token: string) {
+    // This creates a client using the user's own JWT token
+    const userClient = createUserClientFromAuthHeader(`Bearer ${token}`);
+
+    if (!userClient) {
+      throw new Error("No valid session found for deletion.");
+    }
+
+    // RPC calls the 'delete_own_user' function we just created in SQL
+    const { error } = await userClient.rpc("delete_own_user");
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return {
+      message: "Your account and profile have been permanently deleted.",
+    };
+  },
 };
