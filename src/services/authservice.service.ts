@@ -6,12 +6,15 @@ import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
 
 export const authService = {
   async registerUser(credentials: SignUpWithPasswordCredentials) {
-    if ("email" in credentials) {
-      if (!credentials.email || !credentials.password) {
-        throw new Error("Email is required for registration.");
-      }
+    if (!('email' in credentials)) {
+    throw new Error("Email registration is required.");
+  }
 
-      const { email, password, options } = credentials;
+  const { email, password, options } = credentials;
+
+  if (!email || !password) {
+    throw new Error("Email and password are required for registration.");
+  }
 
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -28,8 +31,9 @@ export const authService = {
       }
 
       return data;
-    }
   },
+
+
 
   async loginUser(credentials: { email: string; password: string }) {
     const { data, error } = await supabase.auth.signInWithPassword({
