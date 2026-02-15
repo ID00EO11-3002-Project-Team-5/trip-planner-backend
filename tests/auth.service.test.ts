@@ -54,8 +54,20 @@ describe("User Lifecycle: Full Integration Test", () => {
 describe("Security: Cross-User Deletion Prevention", () => {
   let userBToken: string;
   let userAId: string;
+  let userBId: string; // Add this to track the attacker
 
   const timestamp = Date.now();
+
+  // CLEANUP AFTER TEST
+  afterAll(async () => {
+    if (userAId) {
+      await adminSupabase.auth.admin.deleteUser(userAId);
+    }
+    if (userBId) {
+      // In case User B wasn't deleted by the test function
+      await adminSupabase.auth.admin.deleteUser(userBId);
+    }
+  });
 
   it("should prevent User B from deleting User A's account", async () => {
     // 1. Create User A
@@ -68,14 +80,15 @@ describe("Security: Cross-User Deletion Prevention", () => {
       });
     userAId = signupA.body.user.id;
 
-    // 2. Create User B (The Attacker)
-    await request(app)
+    // 2. Create User B
+    const signupB = await request(app)
       .post("/auth/signup")
       .send({
         email: `attacker-${timestamp}@test.com`,
         password: "Password123!",
         username: "attacker_user",
       });
+    userBId = signupB.body.user.id; // Capture ID for cleanup
 
     const loginB = await request(app)
       .post("/auth/login")
@@ -86,19 +99,13 @@ describe("Security: Cross-User Deletion Prevention", () => {
     userBToken = loginB.body.session.access_token;
 
     // 3. ATTEMPT ATTACK
-    // User B calls the delete endpoint.
-    // Even if they try to pass User A's ID in a body (if your API allowed it),
-    // the SQL function 'auth.uid()' will still only see User B's ID.
     const res = await request(app)
       .delete("/auth/delete_account")
       .set("Authorization", `Bearer ${userBToken}`);
 
     // 4. VERIFY RESULTS
-    // The function will execute, but it will only delete User B (themselves).
-    // We check if User A still exists using the admin client.
     const { data: userA } = await adminSupabase.auth.admin.getUserById(userAId);
-
-    expect(userA.user).not.toBeNull(); // User A must still exist
-    expect(res.statusCode).toBe(200); // The call 'succeeds' but only deletes the caller
+    expect(userA.user).not.toBeNull();
+    expect(res.statusCode).toBe(200);
   });
 });
