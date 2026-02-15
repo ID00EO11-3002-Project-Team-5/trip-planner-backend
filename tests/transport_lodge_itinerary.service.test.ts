@@ -1,3 +1,5 @@
+import request from "supertest";
+import app from "../src/app";
 import { supabase } from "../src/lib/supabaseClients";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
@@ -51,13 +53,11 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
   });
 
   it("should create itinerary, lodging, and transport in one request and verify RLS", async () => {
-    const response = await fetch("http://localhost:3000/itinerary/full", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
+    // Use lowercase 'request' here
+    const response = await request(app)
+      .post("/itinerary/full")
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
         id_trip: testTripId,
         title_itit: "London Transit & Stay",
         date_itit: "2026-08-01",
@@ -71,12 +71,11 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
           name_lodg: "The Savoy",
           address_lodg: "Strand, London",
         },
-      }),
-    });
+      });
 
-    const body = await response.json();
+    // Supertest puts the JSON response in response.body
+    const body = response.body;
 
-    // --- ADDED: DEBUG LOG ---
     if (response.status !== 201) {
       console.log("❌ ERROR 500 DETAILS:", JSON.stringify(body, null, 2));
     }
@@ -86,6 +85,7 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
     expect(body.transport.provider_tran).toBe("British Airways");
     expect(body.lodging.name_lodg).toBe("The Savoy");
 
+    // Verify DB via Supabase client directly
     const { data: dbCheck } = await supabase
       .from("t_itinerary_item_itit")
       .select(`*, t_lodging_lodg(*), t_transport_tran(*)`)
