@@ -15,9 +15,7 @@ describe("User Lifecycle: Full Integration Test", () => {
 
   it("should complete the full user lifecycle successfully", async () => {
     // 1. SIGN UP
-    const signupRes = await request(app)
-      .post("/auth/signup")
-      .send(testUser);
+    const signupRes = await request(app).post("/auth/signup").send(testUser);
     expect(signupRes.statusCode).toEqual(201);
     userId = signupRes.body.user.id;
 
@@ -35,7 +33,7 @@ describe("User Lifecycle: Full Integration Test", () => {
     expect(logoutRes.statusCode).toEqual(200);
     expect(logoutRes.body.message).toContain("Logout successful");
 
-    // 4. RE-LOGIN 
+    // 4. RE-LOGIN
     const reloginRes = await request(app)
       .post("/auth/login")
       .send({ email: testUser.email, password: testUser.password });
@@ -59,28 +57,34 @@ describe("Security: Cross-User Deletion Prevention", () => {
 
   it("should prevent User B from deleting User A's account", async () => {
     // 1. Create User A
-    const signupA = await request(app).post("/auth/signup").send({
-      email: `victim-${timestamp}@test.com`,
-      password: "Password123!",
-      username: "victim_user"
-    });
+    const signupA = await request(app)
+      .post("/auth/signup")
+      .send({
+        email: `victim-${timestamp}@test.com`,
+        password: "Password123!",
+        username: "victim_user",
+      });
     userAId = signupA.body.user.id;
 
     // 2. Create User B (The Attacker)
-    await request(app).post("/auth/signup").send({
-      email: `attacker-${timestamp}@test.com`,
-      password: "Password123!",
-      username: "attacker_user"
-    });
+    await request(app)
+      .post("/auth/signup")
+      .send({
+        email: `attacker-${timestamp}@test.com`,
+        password: "Password123!",
+        username: "attacker_user",
+      });
 
-    const loginB = await request(app).post("/auth/login").send({
-      email: `attacker-${timestamp}@test.com`,
-      password: "Password123!"
-    });
+    const loginB = await request(app)
+      .post("/auth/login")
+      .send({
+        email: `attacker-${timestamp}@test.com`,
+        password: "Password123!",
+      });
     userBToken = loginB.body.session.access_token;
 
     // 3. ATTEMPT ATTACK
-    // User B calls the delete endpoint. 
+    // User B calls the delete endpoint.
     // Even if they try to pass User A's ID in a body (if your API allowed it),
     // the SQL function 'auth.uid()' will still only see User B's ID.
     const res = await request(app)
@@ -91,7 +95,7 @@ describe("Security: Cross-User Deletion Prevention", () => {
     // The function will execute, but it will only delete User B (themselves).
     // We check if User A still exists using the admin client.
     const { data: userA } = await adminSupabase.auth.admin.getUserById(userAId);
-    
+
     expect(userA.user).not.toBeNull(); // User A must still exist
     expect(res.statusCode).toBe(200); // The call 'succeeds' but only deletes the caller
   });
