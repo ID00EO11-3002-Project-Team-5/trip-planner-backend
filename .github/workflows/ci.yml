@@ -90,7 +90,7 @@ jobs:
       - name: 5. Auth Lifecycle Test (Jest)
 
         run: npm test tests/auth.service.test.ts
-itinerary-integration-test:
+  itinerary-integration-test:
   name: Itinerary Full-Flow Integration
   runs-on: ubuntu-latest
   needs: static-analysis
