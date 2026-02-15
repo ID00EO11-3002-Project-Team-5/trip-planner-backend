@@ -3,8 +3,6 @@ import {
   createItinerarySchema,
   reorderItinerarySchema,
 } from "../validators/itinerary.schema";
-import { lodgingService } from "../services/lodging.service";
-import { transportService } from "../services/transport.service";
 import {
   createItineraryItemService,
   getTripScheduleService,

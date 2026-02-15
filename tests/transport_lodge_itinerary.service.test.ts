@@ -1,5 +1,3 @@
-import request from "supertest";
-import app from "../src/app";
 import { supabase } from "../src/lib/supabaseClients";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
