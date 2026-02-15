@@ -115,8 +115,8 @@ export const createFullItineraryItem = async (req: Request, res: Response) => {
   const { id_trip, title_itit, date_itit, lodging, transport } = req.body;
 
   // 1. Insert ONLY the itinerary fields
-  const { data: itinerary, error: ititError } = await req.supabase!
-    .from("t_itinerary_item_itit")
+  const { data: itinerary, error: ititError } = await req
+    .supabase!.from("t_itinerary_item_itit")
     .insert({
       id_trip,
       title_itit,
@@ -130,14 +130,14 @@ export const createFullItineraryItem = async (req: Request, res: Response) => {
 
   // 2. Now use itinerary.id_itit to insert into the other tables
   if (lodging) {
-    await req.supabase!
-      .from("t_lodging_lodg")
+    await req
+      .supabase!.from("t_lodging_lodg")
       .insert({ ...lodging, id_itit: itinerary.id_itit });
   }
 
   if (transport) {
-    await req.supabase!
-      .from("t_transport_tran")
+    await req
+      .supabase!.from("t_transport_tran")
       .insert({ ...transport, id_itit: itinerary.id_itit });
   }
 

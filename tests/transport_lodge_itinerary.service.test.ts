@@ -4,16 +4,16 @@ import { supabase } from "../src/lib/supabaseClients";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 describe("Full Itinerary Mega-Flow Integration Test", () => {
-  let supabaseAdmin: SupabaseClient; 
+  let supabaseAdmin: SupabaseClient;
   let testUser: any;
   let authToken: string;
   let testTripId: string;
   const uniqueEmail = `traveler-${Date.now()}@test.com`;
-    
+
   beforeAll(async () => {
     supabaseAdmin = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SERVICE_ROLE_KEY!
+      process.env.SERVICE_ROLE_KEY!,
     );
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -30,20 +30,22 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
         title_trip: "Test Cleanup Trip",
         id_user_creator: testUser.id,
         startdate_trip: "2026-08-01",
-        enddate_trip: "2026-08-15"
+        enddate_trip: "2026-08-15",
       })
       .select()
       .single();
     if (tripError) throw tripError;
     testTripId = trip.id_trip;
 
-    
     await new Promise((resolve) => setTimeout(resolve, 500));
   });
 
   afterAll(async () => {
     if (testTripId) {
-      await supabaseAdmin.from("t_trip_trip").delete().eq("id_trip", testTripId);
+      await supabaseAdmin
+        .from("t_trip_trip")
+        .delete()
+        .eq("id_trip", testTripId);
     }
     if (testUser) {
       await supabaseAdmin.auth.admin.deleteUser(testUser.id);
@@ -55,7 +57,7 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${authToken}`
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         id_trip: testTripId,
@@ -65,13 +67,13 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
           type_tran: "Flight",
           provider_tran: "British Airways",
           deploc_tran: "JFK",
-          arrloc_tran: "LHR"
+          arrloc_tran: "LHR",
         },
         lodging: {
           name_lodg: "The Savoy",
-          address_lodg: "Strand, London"
-        }
-      })
+          address_lodg: "Strand, London",
+        },
+      }),
     });
 
     const body = await response.json();

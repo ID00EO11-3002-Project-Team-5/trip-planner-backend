@@ -4,7 +4,7 @@ import {
   getTripSchedule,
   reorderItinerary,
   deleteItinerary,
-  createFullItineraryItem
+  createFullItineraryItem,
 } from "../controllers/itinerary.controller";
 import { protect } from "../middleware/authMiddleware";
 
