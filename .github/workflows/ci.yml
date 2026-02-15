@@ -92,8 +92,7 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       ANON_KEY: ${{ secrets.ANON_KEY }}
-      # We map your secret to the name your code expects
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
+      SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
       PORT: 3000
     steps:
       - name: Checkout Code
