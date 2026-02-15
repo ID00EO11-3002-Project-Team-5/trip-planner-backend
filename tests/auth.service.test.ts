@@ -90,7 +90,7 @@ describe("Security: Cross-User Deletion Prevention", () => {
     // Even if they try to pass User A's ID in a body (if your API allowed it),
     // the SQL function 'auth.uid()' will still only see User B's ID.
     const res = await request(app)
-      .post("/auth/delete_account")
+      .delete("/auth/delete_account")
       .set("Authorization", `Bearer ${userBToken}`);
 
     // 4. VERIFY RESULTS
