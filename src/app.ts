@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import { supabase } from "./lib/supabaseClients";
+import { swaggerSpec } from "./lib/swagger";
 import expensesRoutes from "./routes/expenses.routes";
 import settlementsRoutes from "./routes/settlements.routes";
 import "dotenv/config";
@@ -25,9 +27,38 @@ app.use((req: any, res, next) => {
   next();
 });
 
+// Redirect root to API docs
+app.get("/", (req, res) => {
+  res.redirect("/api-docs");
+});
+
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Backend is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: Backend is running
+ */
 app.get("/health", (req, res) => {
   res.json({ status: "Backend is running" });
 });
+
+// Swagger API Documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: "Trip Planner API Docs",
+  customCss: '.swagger-ui .topbar { display: none }',
+}));
 
 //  Wire expenses routes
 app.use("/expenses", expensesRoutes);
