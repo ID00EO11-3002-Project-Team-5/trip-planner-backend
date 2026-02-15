@@ -49,7 +49,6 @@ describe("User Lifecycle: Full Integration Test", () => {
 });
 
 describe("Security: Cross-User Deletion Prevention", () => {
-  let userAToken: string;
   let userBToken: string;
   let userAId: string;
 
