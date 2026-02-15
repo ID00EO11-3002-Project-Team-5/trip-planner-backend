@@ -17,7 +17,10 @@ describe("User Lifecycle: Full Integration Test", () => {
     // 1. SIGN UP
     const signupRes = await request(app).post("/auth/signup").send(testUser);
     expect(signupRes.statusCode).toEqual(201);
+
     userId = signupRes.body.user.id;
+    expect(typeof userId).toBe("string");
+    expect(userId.length).toBeGreaterThan(0);
 
     // 2. LOGIN
     const loginRes = await request(app)
