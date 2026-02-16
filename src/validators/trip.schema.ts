@@ -3,6 +3,8 @@ export const createTripSchema = z
   .object({
     title_trip: z.string().min(1, "Title is required"),
 
+    description_trip: z.string().optional(),
+
     startdate_trip: z.string().refine((s) => !Number.isNaN(Date.parse(s)), {
       message: "startdate_trip must be a valid ISO date string",
     }),

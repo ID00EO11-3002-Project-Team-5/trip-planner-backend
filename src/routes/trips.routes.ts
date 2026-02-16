@@ -25,23 +25,29 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - title_trip
+ *               - startdate_trip
+ *               - enddate_trip
  *             properties:
- *               name:
+ *               title_trip:
  *                 type: string
- *               description:
+ *                 description: Trip title
+ *               description_trip:
  *                 type: string
- *               start_date:
+ *                 description: Trip description (optional)
+ *               startdate_trip:
  *                 type: string
- *                 format: date
- *               end_date:
+ *                 format: date-time
+ *                 description: Trip start date (ISO string)
+ *               enddate_trip:
  *                 type: string
- *                 format: date
- *               destination:
- *                 type: string
+ *                 format: date-time
+ *                 description: Trip end date (ISO string)
  *     responses:
  *       201:
  *         description: Trip created successfully
+ *       400:
+ *         description: Validation error
  *       401:
  *         description: Unauthorized
  */
@@ -116,21 +122,25 @@ router.get("/:id", protect, getTrip);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               title_trip:
  *                 type: string
- *               description:
+ *                 description: Trip title
+ *               description_trip:
  *                 type: string
- *               start_date:
+ *                 description: Trip description
+ *               startdate_trip:
  *                 type: string
- *                 format: date
- *               end_date:
+ *                 format: date-time
+ *                 description: Trip start date (ISO string)
+ *               enddate_trip:
  *                 type: string
- *                 format: date
+ *                 format: date-time
+ *                 description: Trip end date (ISO string)
  *     responses:
  *       200:
  *         description: Trip updated successfully
- *       404:
- *         description: Trip not found
+ *       403:
+ *         description: Forbidden - not authorized to update this trip
  *       401:
  *         description: Unauthorized
  */
