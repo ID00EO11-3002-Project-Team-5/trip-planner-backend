@@ -44,7 +44,7 @@ describe("User Lifecycle: Full Integration Test", () => {
 
     // 5. DELETE ACCOUNT
     const deleteRes = await request(app)
-      .post("/auth/delete_account")
+      .delete("/auth/delete_account")
       .set("Authorization", `Bearer ${freshToken}`);
     expect(deleteRes.statusCode).toEqual(200);
     expect(deleteRes.body.message).toContain("permanently deleted");
@@ -54,23 +54,20 @@ describe("User Lifecycle: Full Integration Test", () => {
 describe("Security: Cross-User Deletion Prevention", () => {
   let userBToken: string;
   let userAId: string;
-  let userBId: string; // Add this to track the attacker
+  let userBId: string;
 
   const timestamp = Date.now();
 
-  // CLEANUP AFTER TEST
   afterAll(async () => {
     if (userAId) {
       await adminSupabase.auth.admin.deleteUser(userAId);
     }
     if (userBId) {
-      // In case User B wasn't deleted by the test function
       await adminSupabase.auth.admin.deleteUser(userBId);
     }
   });
 
   it("should prevent User B from deleting User A's account", async () => {
-    // 1. Create User A
     const signupA = await request(app)
       .post("/auth/signup")
       .send({
@@ -80,7 +77,6 @@ describe("Security: Cross-User Deletion Prevention", () => {
       });
     userAId = signupA.body.user.id;
 
-    // 2. Create User B
     const signupB = await request(app)
       .post("/auth/signup")
       .send({
@@ -88,8 +84,7 @@ describe("Security: Cross-User Deletion Prevention", () => {
         password: "Password123!",
         username: "attacker_user",
       });
-    userBId = signupB.body.user.id; // Capture ID for cleanup
-
+    userBId = signupB.body.user.id;
     const loginB = await request(app)
       .post("/auth/login")
       .send({
@@ -98,12 +93,10 @@ describe("Security: Cross-User Deletion Prevention", () => {
       });
     userBToken = loginB.body.session.access_token;
 
-    // 3. ATTEMPT ATTACK
     const res = await request(app)
       .delete("/auth/delete_account")
       .set("Authorization", `Bearer ${userBToken}`);
 
-    // 4. VERIFY RESULTS
     const { data: userA } = await adminSupabase.auth.admin.getUserById(userAId);
     expect(userA.user).not.toBeNull();
     expect(res.statusCode).toBe(200);
