@@ -7,7 +7,7 @@ export const sendInviteService = async (
   supabase: SupabaseClient,
   tripId: string,
   invitedUserId: string,
-  currentUserId: string
+  currentUserId: string,
 ) => {
   // 1️⃣ Check inviter is a member of the trip
   const { data: member, error: memberError } = await supabase
@@ -68,7 +68,7 @@ export const sendInviteService = async (
 export const acceptInviteService = async (
   supabase: SupabaseClient,
   inviteId: string,
-  currentUserId: string
+  currentUserId: string,
 ) => {
   // 1️⃣ Get pending invite
   const { data: invite, error: inviteError } = await supabase
@@ -117,7 +117,7 @@ export const acceptInviteService = async (
 export const rejectInviteService = async (
   supabase: SupabaseClient,
   inviteId: string,
-  currentUserId: string
+  currentUserId: string,
 ) => {
   // 1️⃣ Get pending invite
   const { data: invite, error: inviteError } = await supabase

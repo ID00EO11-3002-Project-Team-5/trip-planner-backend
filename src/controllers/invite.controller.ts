@@ -16,7 +16,7 @@ import {
  */
 export const sendInvite = async (
   req: Request<{ tripId: string }>,
-  res: Response
+  res: Response,
 ) => {
   if (!req.supabase || !req.user) {
     return res
@@ -47,7 +47,7 @@ export const sendInvite = async (
       req.supabase,
       paramParsed.data.tripId,
       bodyParsed.data.invitedUserId,
-      req.user.id
+      req.user.id,
     );
 
     return res.status(201).json(invite);
@@ -68,7 +68,7 @@ export const sendInvite = async (
  */
 export const acceptInvite = async (
   req: Request<{ inviteId: string }>,
-  res: Response
+  res: Response,
 ) => {
   if (!req.supabase || !req.user) {
     return res
@@ -89,7 +89,7 @@ export const acceptInvite = async (
     const result = await acceptInviteService(
       req.supabase,
       paramParsed.data.inviteId,
-      req.user.id
+      req.user.id,
     );
 
     return res.status(200).json(result);
@@ -110,7 +110,7 @@ export const acceptInvite = async (
  */
 export const rejectInvite = async (
   req: Request<{ inviteId: string }>,
-  res: Response
+  res: Response,
 ) => {
   if (!req.supabase || !req.user) {
     return res
@@ -131,7 +131,7 @@ export const rejectInvite = async (
     const result = await rejectInviteService(
       req.supabase,
       paramParsed.data.inviteId,
-      req.user.id
+      req.user.id,
     );
 
     return res.status(200).json(result);

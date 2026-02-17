@@ -49,8 +49,5 @@ export const protect = async (
       error: "Internal server error during authentication",
       details: message,
     });
-
-
-
   }
 };
