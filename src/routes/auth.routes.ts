@@ -153,4 +153,21 @@ router.post("/logout", async (req: Request, res: Response) => {
   }
 });
 
+router.delete("/delete_account", async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const result = await authService.deleteSelfAccount(token);
+    return res.status(200).json(result);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Deletion failed";
+    return res.status(500).json({ error: message });
+  }
+});
+
 export default router;

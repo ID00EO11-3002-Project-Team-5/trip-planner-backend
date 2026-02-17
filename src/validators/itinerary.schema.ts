@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { lodgingSchema } from "./lodging.schema";
+import { transportSchema } from "./transport.schema";
 
 export const createItinerarySchema = z.object({
   id_trip: z.string().uuid(),
@@ -8,7 +10,10 @@ export const createItinerarySchema = z.object({
   location_itit: z.string().optional().nullable(),
   cost_itit: z.number().optional().nullable(),
   position_itit: z.number().int().default(0),
-  id_loca: z.string().uuid().optional().nullable(), // Link to t_location_loca
+  id_loca: z.string().uuid().optional().nullable(),
+  notes_itit: z.string().optional().nullable(),
+  lodging: lodgingSchema.omit({ id_itit: true }).optional(),
+  transport: transportSchema.omit({ id_itit: true }).optional(),
 });
 
 export const reorderItinerarySchema = z.object({

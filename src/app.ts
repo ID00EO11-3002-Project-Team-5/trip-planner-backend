@@ -10,6 +10,8 @@ import authserviceRoutes from "./routes/auth.routes";
 import tripsRoutes from "./routes/trips.routes";
 import itineraryRoutes from "./routes/itinerary.routes";
 import destination_stopRoutes from "./routes/destination_stops.routes";
+import lodgingRoutes from "./routes/lodging.routes";
+import transportRoutes from "./routes/transport.routes";
 
 const app = express();
 
@@ -120,6 +122,8 @@ app.use("/trips", tripsRoutes);
 app.use("/auth", authserviceRoutes);
 app.use("/stops", destination_stopRoutes);
 app.use("/itinerary", itineraryRoutes);
+app.use("/lodging", lodgingRoutes);
+app.use("/transport", transportRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

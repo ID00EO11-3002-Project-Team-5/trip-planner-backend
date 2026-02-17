@@ -2,10 +2,14 @@ import { Request, Response } from "express";
 import {
   CreateStopSchema,
   ReorderStopsSchema,
+  TripIdParamSchema,
+  StopIdParamSchema,
 } from "../validators/destination_stops.schema";
 import {
   createStopService,
   reorderStopsService,
+  deleteStopService,
+  getStopsByTripService,
 } from "../services/destination_stops.service";
 
 export const createStop = async (req: Request, res: Response) => {
@@ -63,5 +67,44 @@ export const reorderStops = async (req: Request, res: Response) => {
       message: "Failed to reorder stops",
       error: message,
     });
+  }
+};
+
+export const getStopsByTrip = async (req: Request, res: Response) => {
+  const paramParsed = TripIdParamSchema.safeParse(req.params);
+  if (!paramParsed.success) {
+    return res.status(400).json({ errors: paramParsed.error.flatten() });
+  }
+
+  try {
+    const stops = await getStopsByTripService(
+      req.supabase!,
+      paramParsed.data.tripId,
+    );
+    return res.status(200).json(stops);
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal Server Error";
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch places", error: errorMessage });
+  }
+};
+
+export const deleteStop = async (req: Request, res: Response) => {
+  const paramParsed = StopIdParamSchema.safeParse(req.params);
+  if (!paramParsed.success) {
+    return res.status(400).json({ errors: paramParsed.error.flatten() });
+  }
+
+  try {
+    await deleteStopService(req.supabase!, paramParsed.data.stopId);
+    return res.status(200).json({ message: "Place removed from trip" });
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal Server Error";
+    return res
+      .status(500)
+      .json({ message: "Failed to delete place", error: errorMessage });
   }
 };
