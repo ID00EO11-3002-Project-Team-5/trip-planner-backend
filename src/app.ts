@@ -10,6 +10,8 @@ import itineraryRoutes from "./routes/itinerary.routes";
 import destination_stopRoutes from "./routes/destination_stops.routes";
 import lodgingRoutes from "./routes/lodging.routes";
 import transportRoutes from "./routes/transport.routes";
+import inviteRoutes from "./routes/invite.routes";
+import messageRoutes from "./routes/message.routes";
 
 const app = express();
 
@@ -34,5 +36,8 @@ app.use("/stops", destination_stopRoutes);
 app.use("/itinerary", itineraryRoutes);
 app.use("/lodging", lodgingRoutes);
 app.use("/transport", transportRoutes);
+app.use("/invites", inviteRoutes);
+app.use("/messages", messageRoutes);
+
 
 export default app;
