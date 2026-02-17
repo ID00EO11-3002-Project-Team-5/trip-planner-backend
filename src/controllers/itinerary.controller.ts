@@ -9,7 +9,7 @@ import {
   reorderItineraryService,
   deleteItineraryItemService,
   updateItineraryService,
-  getTripCostSummaryService
+  getTripCostSummaryService,
 } from "../services/itinerary.service";
 import { id } from "zod/v4/locales";
 import { error } from "node:console";
@@ -149,22 +149,22 @@ export const createFullItineraryItem = async (req: Request, res: Response) => {
 
 export const updateItinerary = async (req: Request, res: Response) => {
   const id = req.params.id as String;
-  try{
-      const updated =  await updateItineraryService (req.supabase!, id, req.body);
-      if (!updated) {
+  try {
+    const updated = await updateItineraryService(req.supabase!, id, req.body);
+    if (!updated) {
       return res.status(404).json({ message: "Itinerary item not found" });
     }
     return res.status(200).json(updated);
   } catch (err: any) {
-    if (err.code === "23503") { 
+    if (err.code === "23503") {
       return res.status(400).json({ message: "Invalid trip or location link" });
     }
     if (err.code === "22P02") {
       return res.status(400).json({ message: "Invalid ID format provided" });
     }
-    return res.status(500).json({ 
-      message: "An unexpected error occurred", 
-      error: err.message 
+    return res.status(500).json({
+      message: "An unexpected error occurred",
+      error: err.message,
     });
   }
 };

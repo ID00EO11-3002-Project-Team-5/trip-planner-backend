@@ -6,7 +6,7 @@ import {
   deleteItinerary,
   createFullItineraryItem,
   updateItinerary,
-  getTripCostSummary
+  getTripCostSummary,
 } from "../controllers/itinerary.controller";
 import { protect } from "../middleware/authMiddleware";
 
