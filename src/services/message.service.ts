@@ -62,13 +62,15 @@ export const getMessagesByTripService = async (
   //  Fetch messages ordered by time
   const { data, error } = await supabase
     .from("t_message_mssg")
-    .select(`
+    .select(
+      `
       id_mssg,
       id_trip,
       id_user,
       content_mssg,
       created_at_mssg
-    `)
+    `,
+    )
     .eq("id_trip", tripId)
     .order("created_at_mssg", { ascending: true });
 

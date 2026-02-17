@@ -39,5 +39,4 @@ app.use("/transport", transportRoutes);
 app.use("/invites", inviteRoutes);
 app.use("/messages", messageRoutes);
 
-
 export default app;
