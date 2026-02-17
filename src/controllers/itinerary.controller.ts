@@ -140,8 +140,6 @@ export const createFullItineraryItem = async (req: Request, res: Response) => {
       .supabase!.from("t_transport_tran")
       .insert({ ...transport, id_itit: itinerary.id_itit });
   }
-
-  // Return the combined object to the test
   res.status(201).json({ ...itinerary, lodging, transport });
 };
 
