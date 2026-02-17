@@ -11,6 +11,15 @@ export const CreateStopSchema = z.object({
     .optional(),
 });
 
+// Validates the URL parameters for GET /stops/trip/:tripId and DELETE /stops/:stopId
+export const StopIdParamSchema = z.object({
+  stopId: z.string().uuid("Invalid Stop ID format"),
+});
+
+export const TripIdParamSchema = z.object({
+  tripId: z.string().uuid("Invalid Trip ID format"),
+});
+
 export type CreateStopInput = z.infer<typeof CreateStopSchema>;
 
 export const ReorderStopsSchema = z.object({
@@ -21,3 +30,16 @@ export const ReorderStopsSchema = z.object({
     }),
   ),
 });
+
+// NOTE: Since we decided NOT to add 'position_loca' to the DB for now,
+// this schema should be commented out or updated to avoid runtime errors
+/*
+export const ReorderStopsSchema = z.object({
+  updates: z.array(
+    z.object({
+      id_loca: z.string().uuid(),
+      position_loca: z.number().int(),
+    }),
+  ),
+});
+*/
