@@ -1,7 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { CreateItineraryInput } from "../validators/itinerary.schema";
-import { supabase } from "../lib/supabaseClients";
-import { id } from "zod/v4/locales";
 
 export async function getTripScheduleService(
   supabase: SupabaseClient,
@@ -72,7 +70,7 @@ export async function deleteItineraryItemService(
 
 export const updateItineraryService = async (
   supabase: SupabaseClient,
-  id: String,
+  id: string,
   updates: any,
 ) => {
   const { data, error } = await supabase

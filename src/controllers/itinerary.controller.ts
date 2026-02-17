@@ -11,8 +11,6 @@ import {
   updateItineraryService,
   getTripCostSummaryService,
 } from "../services/itinerary.service";
-import { id } from "zod/v4/locales";
-import { error } from "node:console";
 
 export const getTripSchedule = async (req: Request, res: Response) => {
   const tripId = req.params.tripId as string;
@@ -148,7 +146,7 @@ export const createFullItineraryItem = async (req: Request, res: Response) => {
 };
 
 export const updateItinerary = async (req: Request, res: Response) => {
-  const id = req.params.id as String;
+  const id = req.params.id as string;
   try {
     const updated = await updateItineraryService(req.supabase!, id, req.body);
     if (!updated) {
