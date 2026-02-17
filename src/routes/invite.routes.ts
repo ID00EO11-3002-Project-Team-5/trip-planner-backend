@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { protect } from "../middleware/auth.middleware";
+import { protect } from "../middleware/authMiddleware";
 import {
   sendInvite,
   acceptInvite,
@@ -7,8 +7,8 @@ import {
 } from "../controllers/invite.controller";
 
 const router = Router();
-
 /**
+ 
  * Send Invite
  * POST /invites/trips/:tripId/invite
  */
