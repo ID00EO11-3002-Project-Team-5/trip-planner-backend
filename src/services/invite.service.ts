@@ -9,7 +9,7 @@ export const sendInviteService = async (
   invitedUserId: string,
   currentUserId: string,
 ) => {
-  // 1️⃣ Check inviter is a member of the trip
+  // 1️⃣ Check inviter is member
   const { data: member, error: memberError } = await supabase
     .from("t_trip_member_trme")
     .select("id_trip")
@@ -32,7 +32,7 @@ export const sendInviteService = async (
     throw new Error("Invited user does not exist");
   }
 
-  // 3️⃣ Check invited user is not already a member
+  // 3️⃣ Check invited user not already member
   const { data: existingMember } = await supabase
     .from("t_trip_member_trme")
     .select("id_trip")
@@ -44,13 +44,14 @@ export const sendInviteService = async (
     throw new Error("User is already a member of this trip");
   }
 
-  // 4️⃣ Insert invite (DB unique index prevents duplicate pending)
+  // 4️⃣ Insert invite
   const { data: invite, error: inviteError } = await supabase
     .from("t_trip_invite_invi")
     .insert({
       id_trip: tripId,
       id_invited_user: invitedUserId,
       id_invited_by: currentUserId,
+      status_invite_invi: "pending", // important
     })
     .select()
     .single();
@@ -74,9 +75,9 @@ export const acceptInviteService = async (
   const { data: invite, error: inviteError } = await supabase
     .from("t_trip_invite_invi")
     .select("*")
-    .eq("id_invite", inviteId)
+    .eq("id_invi", inviteId)
     .eq("id_invited_user", currentUserId)
-    .eq("status_invite", "pending")
+    .eq("status_invite_invi", "pending")
     .single();
 
   if (inviteError || !invite) {
@@ -87,10 +88,9 @@ export const acceptInviteService = async (
   const { error: updateError } = await supabase
     .from("t_trip_invite_invi")
     .update({
-      status_invite: "accepted",
-      responded_at: new Date().toISOString(),
+      status_invite_invi: "accepted",
     })
-    .eq("id_invite", inviteId);
+    .eq("id_invi", inviteId);
 
   if (updateError) {
     throw new Error(updateError.message);
@@ -119,27 +119,24 @@ export const rejectInviteService = async (
   inviteId: string,
   currentUserId: string,
 ) => {
-  // 1️⃣ Get pending invite
   const { data: invite, error: inviteError } = await supabase
     .from("t_trip_invite_invi")
     .select("*")
-    .eq("id_invite", inviteId)
+    .eq("id_invi", inviteId)
     .eq("id_invited_user", currentUserId)
-    .eq("status_invite", "pending")
+    .eq("status_invite_invi", "pending")
     .single();
 
   if (inviteError || !invite) {
     throw new Error("Invite not found or already handled");
   }
 
-  // 2️⃣ Update status to rejected
   const { error: updateError } = await supabase
     .from("t_trip_invite_invi")
     .update({
-      status_invite: "rejected",
-      responded_at: new Date().toISOString(),
+      status_invite_invi: "rejected",
     })
-    .eq("id_invite", inviteId);
+    .eq("id_invi", inviteId);
 
   if (updateError) {
     throw new Error(updateError.message);
