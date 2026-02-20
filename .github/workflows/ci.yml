@@ -84,7 +84,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: 5. Auth Lifecycle Test (Jest)
+      - name: 5. Auth Lifecycle Test
         run: npm test tests/auth.service.test.ts
 
   itinerary-integration-test:
@@ -111,3 +111,53 @@ jobs:
 
       - name: 6. Run Itinerary Mega-Flow Test
         run: npm test tests/transport_lodge_itinerary.service.test.ts
+
+  itinerary-reorder-test:
+    name: Itinerary reorder
+    runs-on: ubuntu-latest
+    needs: static-analysis
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      ANON_KEY: ${{ secrets.ANON_KEY }}
+      SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
+      PORT: 3000
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: 6. Run Itinerary reorder Test
+        run: npm test tests/destination_stops.test.ts
+
+  invite-test:
+    name: invitation  creating, receiving, accepting.
+    runs-on: ubuntu-latest
+    needs: static-analysis
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      ANON_KEY: ${{ secrets.ANON_KEY }}
+      SERVICE_ROLE_KEY: ${{ secrets.SERVICE_ROLE_KEY }}
+      PORT: 3000
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: 6. Run invites Test
+        run: npm test tests/invites.test.ts

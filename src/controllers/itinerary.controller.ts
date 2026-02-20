@@ -114,21 +114,18 @@ export async function deleteItinerary(req: Request, res: Response) {
 export const createFullItineraryItem = async (req: Request, res: Response) => {
   const { id_trip, title_itit, date_itit, lodging, transport } = req.body;
 
-  // 1. Insert ONLY the itinerary fields
   const { data: itinerary, error: ititError } = await req
     .supabase!.from("t_itinerary_item_itit")
     .insert({
       id_trip,
       title_itit,
       date_itit,
-      // DO NOT put 'lodging' or 'transport' here!
     })
     .select()
     .single();
 
   if (ititError) throw ititError;
 
-  // 2. Now use itinerary.id_itit to insert into the other tables
   if (lodging) {
     await req
       .supabase!.from("t_lodging_lodg")
