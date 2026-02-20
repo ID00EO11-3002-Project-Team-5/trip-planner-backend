@@ -9,7 +9,6 @@ describe("Trip Invite & Collaboration Integration", () => {
   let ownerUser: any;
   let friendUser: any;
   let testTripId: string;
-  let inviteCode: string;
 
   beforeAll(async () => {
     // 2. Setup Users
