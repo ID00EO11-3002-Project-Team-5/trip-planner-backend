@@ -84,7 +84,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: 5. Auth Lifecycle Test (Jest)
+      - name: 5. Auth Lifecycle Test
         run: npm test tests/auth.service.test.ts
 
   itinerary-integration-test:
@@ -134,7 +134,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: 6. Run Itinerary Mega-Flow Test
+      - name: 6. Run Itinerary reorder Test
         run: npm test tests/destination_stops.test.ts
 
   invite-test:
@@ -159,5 +159,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: 6. Run Itinerary Mega-Flow Test
+      - name: 6. Run invites Test
         run: npm test tests/invites.test.ts
