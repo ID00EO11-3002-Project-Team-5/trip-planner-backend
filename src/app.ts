@@ -14,6 +14,7 @@ import lodgingRoutes from "./routes/lodging.routes";
 import transportRoutes from "./routes/transport.routes";
 import messageRoutes from "./routes/message.routes";
 import inviteRoutes from "./routes/invite.routes";
+import documentRoutes from "./routes/document.routes";
 
 const app = express();
 
@@ -128,6 +129,7 @@ app.use("/lodging", lodgingRoutes);
 app.use("/transport", transportRoutes);
 app.use("/messages", messageRoutes);
 app.use("/invite", inviteRoutes);
+app.use("/documents", documentRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
