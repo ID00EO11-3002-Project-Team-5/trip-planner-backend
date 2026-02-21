@@ -23,7 +23,7 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
     if (authError) throw authError;
     testUser = authData.user;
     authToken = authData.session?.access_token || "";
-
+ 
     const { data: trip, error: tripError } = await supabase
       .from("t_trip_trip")
       .insert({
