@@ -30,16 +30,3 @@ export const ReorderStopsSchema = z.object({
     }),
   ),
 });
-
-// NOTE: Since we decided NOT to add 'position_loca' to the DB for now,
-// this schema should be commented out or updated to avoid runtime errors
-/*
-export const ReorderStopsSchema = z.object({
-  updates: z.array(
-    z.object({
-      id_loca: z.string().uuid(),
-      position_loca: z.number().int(),
-    }),
-  ),
-});
-*/

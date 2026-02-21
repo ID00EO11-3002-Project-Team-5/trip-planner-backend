@@ -26,14 +26,14 @@ describe("Trip Invite & Collaboration Integration", () => {
     ownerToken = oAuth.session?.access_token || "";
     friendToken = fAuth.session?.access_token || "";
 
-    // 3. Setup Trip with REQUIRED dates
+    // 3. Setup Trip
     const { data: trip, error } = await adminSupabase
       .from("t_trip_trip")
       .insert({
         title_trip: "Collab Trip",
         id_user_creator: ownerUser.id,
-        startdate_trip: "2026-06-01", // Required
-        enddate_trip: "2026-06-10", // Required
+        startdate_trip: "2026-06-01",
+        enddate_trip: "2026-06-10",
       })
       .select()
       .single();
@@ -55,12 +55,11 @@ describe("Trip Invite & Collaboration Integration", () => {
 
   it("should allow owner to create an invite and friend to join", async () => {
     // 1. Owner creates invite
-    // The schema requires invitedUserId (UUID), not email
     const inviteRes = await request(app)
       .post(`/invite/trips/${testTripId}/invite`)
       .set("Authorization", `Bearer ${ownerToken}`)
       .send({
-        invitedUserId: friendUser.id, // Match the SendInviteSchema requirement
+        invitedUserId: friendUser.id,
       });
 
     if (inviteRes.status !== 201) {

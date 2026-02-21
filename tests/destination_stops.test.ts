@@ -47,7 +47,7 @@ describe("Itinerary Reordering Integration", () => {
       .send({
         id_trip: testTripId,
         title_itit: "Activity A",
-        date_itit: "2026-10-01", // Added required date_itit from schema
+        date_itit: "2026-10-01",
         position_itit: 1,
       });
 
@@ -61,14 +61,8 @@ describe("Itinerary Reordering Integration", () => {
         position_itit: 2,
       });
 
-    // DEBUG: Ensure we actually have IDs before proceeding
     const id1 = res1.body.id_itit || res1.body.data?.id_itit;
     const id2 = res2.body.id_itit || res2.body.data?.id_itit;
-
-    if (!id1 || !id2) {
-      console.log("❌ POST FAIL - res1 body:", res1.body);
-      throw new Error("Could not retrieve id_itit from POST responses");
-    }
 
     // 2. Use the validated IDs in the reorder request
     const reorderRes = await request(app)
@@ -81,13 +75,6 @@ describe("Itinerary Reordering Integration", () => {
           { id_itit: id2, position_itit: 1 },
         ],
       });
-
-    if (reorderRes.status !== 200) {
-      console.log(
-        "❌ REORDER ERROR DETAILS:",
-        JSON.stringify(reorderRes.body, null, 2),
-      );
-    }
 
     expect(reorderRes.status).toBe(200);
 

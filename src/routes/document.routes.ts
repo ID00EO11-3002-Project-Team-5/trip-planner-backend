@@ -14,7 +14,6 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-// Use 'file' as the field name for the frontend
 router.post("/", protect, upload.single("file"), uploadDocument);
 
 router.get("/:docId/view", protect, getDocumentUrl);

@@ -7,7 +7,7 @@ export const lodgingController = {
       const data = await lodgingService.createLodging(req.body);
       res.status(201).json(data);
     } catch (error) {
-      next(error); // Let your error handler process Zod or Supabase errors
+      next(error);
     }
   },
 

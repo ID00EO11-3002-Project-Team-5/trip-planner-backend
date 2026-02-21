@@ -53,7 +53,6 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
   });
 
   it("should create itinerary, lodging, and transport in one request and verify RLS", async () => {
-    // Use lowercase 'request' here
     const response = await request(app)
       .post("/itinerary/full")
       .set("Authorization", `Bearer ${authToken}`)
@@ -73,12 +72,7 @@ describe("Full Itinerary Mega-Flow Integration Test", () => {
         },
       });
 
-    // Supertest puts the JSON response in response.body
     const body = response.body;
-
-    if (response.status !== 201) {
-      console.log("❌ ERROR 500 DETAILS:", JSON.stringify(body, null, 2));
-    }
 
     expect(response.status).toBe(201);
     expect(body.title_itit).toBe("London Transit & Stay");
