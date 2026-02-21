@@ -5,7 +5,7 @@
     "lib": ["esnext"],
     "moduleResolution": "Node",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node", "multer", "express", "jest"],
 
