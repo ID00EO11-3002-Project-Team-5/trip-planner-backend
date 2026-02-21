@@ -17,7 +17,6 @@ export const createTripSchema = z
     const end = Date.parse(obj.enddate_trip);
 
     if (!Number.isFinite(start) || !Number.isFinite(end)) return;
-    // individual refinements already report
 
     if (end < start) {
       ctx.addIssue({
