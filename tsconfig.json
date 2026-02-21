@@ -8,6 +8,7 @@
     "rootDir": "src",
     "types": ["node", "multer", "express", "jest"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "node"],
 
     "esModuleInterop": true,
     "strict": true,
@@ -15,7 +16,7 @@
 
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "api/**/*", "tests/**/*"],
   "files": ["src/types/express.d.ts"],
-  "exclude": ["tests", "**/*.test.ts"]
+  "exclude": ["node_modules"]
 }

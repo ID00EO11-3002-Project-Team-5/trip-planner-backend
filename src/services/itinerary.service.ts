@@ -43,6 +43,7 @@ export async function reorderItineraryService(
   const payload = updates.map((item) => ({
     id_itit: item.id_itit,
     position_itit: item.position_itit,
+    id_trip: tripId,
   }));
 
   const { data, error } = await supabase.rpc("reorder_itinerary", {

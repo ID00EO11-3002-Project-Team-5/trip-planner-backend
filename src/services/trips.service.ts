@@ -19,6 +19,7 @@ export async function createTripService(
     .insert({
       id_user_creator: user.id,
       title_trip: payload.title_trip,
+      description_trip: payload.description_trip || null,
       startdate_trip: payload.startdate_trip,
       enddate_trip: payload.enddate_trip,
     })
